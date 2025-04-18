@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Scheduler - Allocate</title>
+	<link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+	<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+	<link href="https://cdn.jsdelivr.net/npm/daisyui@5.0.2/themes.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+<body class="p-4">
+  <div class="flex flex-row items-center gap-2"">
+    <img class="h-10" src="{{ url_for('static', filename='favicon/android-chrome-192x192.png') }}">
+    <h1>BaradDur</h1>
+    <h6 class="opacity-25 hover:opacity-100 transition transition-opacity duration-700">Your personal all-seeing eye</h6>
+  </div>
+  <div class="breadcrumbs text-sm">
+    <ul>
+      <li><a href="/">Home</a></li>
+      {% if page_data %}
+        <li>Application for {{ page_data['show_data']['title'] }}</li>
+      {% else %}
+        <li>Allocate</li>
+      {% endif %}
+    </ul>
+  </div>
+	{% if page_data %}
+    <h2>{{ page_data['show_data']['title'] }}</h2>
+
+    <div class="heading flex items-center gap-3 sm:flex-row flex-col-reverse">
+      <div class="left flex-grow-10 w-full">
+        <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box">
+          <legend class="fieldset-legend">Description</legend>
+          <h2>{{ page_data['show_data']['description'] | safe}}</h2>
+        </fieldset>
+
+        <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box">
+          <legend class="fieldset-legend">Credits</legend>
+          <h2>{{ page_data['show_data']['credits_string'] }}</h2>
+        </fieldset>
+      </div>
+      <div class="left">
+        <div class="avatar">
+          <div class="w-70 rounded">
+            {% if page_data['show_data']['photo'] %}
+              <img src="{{ 'https://ury.org.uk/' + page_data['show_data']['photo'] }}" />
+            {{ else }}
+              <img src="https://ury.org.uk/media/image_meta/ShowImageMetadata/offair.png" />
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3>page under construction - allocation features do not work</h3>
+    
+    <div class="flex gap-5 flex-col md:flex-row">
+      <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box w-full md:w-100 flex-grow-10">
+        <legend class="fieldset-legend">Weeks Selected</legend>
+          {% for week in page_data['applied_weeks'] %}
+          <label class="fieldset-label">
+            <input type="checkbox" {{ "checked" if week[0] }} class="checkbox week-checkbox" id="wk{{ week[2] }}" />
+            {{ week[2] }} - {{ week[1] }}
+          </label>
+          {% endfor %}
+      </fieldset>
+
+      <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box w-full flex-grow-1">
+        <legend class="fieldset-legend">Times Selected</legend>
+        <div class="flex flex-col gap-5">
+          {% for time in page_data['applied_times'] %}
+            <div class="flex gap-2 flex-col md:flex-row">
+              <div class="div flex flex-row items-center gap-2">
+                <a onclick="nonCustomTimeAllocation(event)" data-timeslotId="{{ time[id] }}" data-timeslotstring="{{ time['time'] }}" class="btn btn-primary join-item grow-1">Allocate</a>
+                <!-- <a href="/allocate" class="btn btn-primary join-item grow-1" {{ "disabled" if time['conflict'] }} aria-disabled="{{ 'true' if time['conflict'] else false }}">Allocate</a> -->
+                <span class="text-base grow-10 whitespace-nowrap">{{ time['time'] }}</span>
+              </div>
+              <div role="alert" class="alert alert-error alert-soft grow-1" {{ "hidden" if not time['conflict']}} aria-hidden="{{ 'true' if time['conflict'] else false }}" >
+                <span>{{ time['info'] }}</span>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div class="divider">Or set custom time</div>
+        
+        <form id="custom-time-form" onsubmit="customTimeAllocation(event)">
+          <input type="hidden" name="custom_time" value="true">
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend">Day</legend>
+            <select class="select" id="custom_day" required>
+              <option disabled selected>Pick a Day</option>
+              <option value="0">Monday</option>
+              <option value="1">Tuesday</option>
+              <option value="2">Wednesday</option>
+              <option value="3">Thursday</option>
+              <option value="4">Friday</option>
+              <option value="5">Saturday</option>
+              <option value="6">Sunday</option>
+            </select>
+          </fieldset>
+          <fieldset class="fieldset flex gap-2 items-center">
+            <legend class="fieldset-legend">Start Time:</legend>
+            <input type="time" id="custom_start_time" name="start_time" class="input input-bordered" required>
+          </fieldset>
+          <fieldset class="fieldset flex gap-2 items-center">
+            <legend class="fieldset-legend">Duration (hours):</legend>
+            <input type="number" id="custom_duration" name="duration" class="input input-bordered" required>
+          </fieldset>
+          <button type="submit" class="btn btn-primary mt-2">Allocate</button>
+        </form>
+      </fieldset>      
+    </div>
+
+    <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box">
+      <legend class="fieldset-legend">Schedule</legend>
+      <iframe src="/calendar" class="w-full h-250" frameborder="0"></iframe>
+    </fieldset>
+
+  {% else %}
+    <p>No valid season selected!</p>
+  {% endif %}
+
+  <div class="collapse collapse-arrow bg-base-100 border border-base-300">
+    <input type="radio" name="my-accordion-2" />
+    <div class="collapse-title font-semibold">API Responses</div>
+    <div class="collapse-content text-sm">{{ page_data }}</div>
+  </div>
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelector("#custom-time-form").addEventListener("change", () => {
+        const form = document.querySelector("#custom-time-form");
+        const day = form.custom_day.value;
+        const start = form.start_time.value;
+        const duration = form.duration.value;
+        console.log(day, start, duration, "hello");
+        if (day && start && duration) {
+          // startTimestamp = new Date(`2021-01-01T${start}:00`).getTime() / 1000;
+          // endTimestamp = startTimestamp + duration * 60 * 60;
+          // console.log(startTimestamp, endTimestamp); 
+          // convert start to seconds after midnight
+          const startSeconds = convertStringTimeToSeconds(start);
+          const durationSeconds = parseInt(duration) * 60 * 60;
+          fetch(`/api/conflict?start=${startSeconds}&duration=${durationSeconds}&day=${day}`)
+          .then(response => response.json())
+          .then(data => {
+            console.log(data)
+          });
+        }
+      });
+    });
+
+    const convertStringTimeToSeconds = (timeString) => {
+      const timeParts = timeString.split(":");
+      const hours = parseInt(timeParts[0]);
+      const minutes = parseInt(timeParts[1]);
+      return (hours * 60 * 60) + (minutes * 60);
+    }
+
+    const timeSlotStringToData = (timeslotString) => {
+      // parse from string like Sun 20:00 - 21:00
+      dayNum = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].indexOf(timeslotString.split(" ")[0]);
+      startTime = convertStringTimeToSeconds(timeslotString.split(" ")[1]);
+      duration = parseInt(timeslotString.split(" ")[3].split(":")[0]) - parseInt(timeslotString.split(" ")[1].split(":")[0]);
+      return { dayNum, startTime, duration }
+    }
+
+    const nonCustomTimeAllocation = async (e) => {
+      e.preventDefault();
+      console.log(e.target)
+      const timeslotId = e.target.dataset.timeslotId;
+      const timeslotString = e.target.dataset.timeslotstring;
+      console.log(timeslotId, timeslotString);
+      const data = {};
+      data["weeks"] = getWeeks();
+      data["time"] = -1;
+      const { dayNum, startTime, duration } = timeSlotStringToData(timeslotString);
+      data["timecustom_day"] = dayNum;
+      data["timecustom_stime"] = startTime;
+      data["timecustom_etime"] = duration;
+
+      console.log(data);
+      submitAllocation(data);
+    }
+
+    const customTimeAllocation = (e) => {
+      e.preventDefault();
+      const form = document.querySelector("#custom-time-form");
+      const data = {};
+      data["weeks"] = getWeeks();
+      data["time"] = -1;
+      data["timecustom_day"] = parseInt(form.custom_day.value);
+      data["timecustom_stime"] = convertStringTimeToSeconds(form.start_time.value);
+      data["timecustom_etime"] = parseInt(form.duration.value);
+
+      console.log(data);
+      submitAllocation(data);
+    }
+
+    const getWeeks = () => {
+      const weeks = {};
+      for (const week of document.querySelectorAll(".week-checkbox")) {
+        weeks[week.id] = week.checked ? 1 : 0;
+      }
+      return weeks;
+    }
+
+    const submitAllocation = async (data) => {
+      const seasonId = window.location.pathname.split("/").pop();
+
+      const response = await fetch(`/api/allocate/${seasonId}`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          'Content-type':'application/json', 
+          'Accept':'application/json',
+        }
+      });
+      if (response.ok) {
+        response.json().then((data) => {
+          console.log(data);
+          const { status, payload } = data;
+          if (status === "OK") {
+            alert("Allocated successfully!");
+          } else {
+            alert("Failed to allocate: " + String(payload));
+          }
+        });
+      } else {
+        alert("Failed to allocate for unknown reason!");
+      }
+    }
+  </script>
+</body>
+</html>

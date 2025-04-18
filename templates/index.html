@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>BaradDur</title>
+	<!-- Broadcast Arrangement Regulation And Distribution - Digital Unified Radio -->
+	<link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+	<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+	<link href="https://cdn.jsdelivr.net/npm/daisyui@5.0.2/themes.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+	<link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='favicon/apple-touch-icon.png') }}">
+	<link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}">
+	<link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}">
+	<link rel="manifest" href="{{ url_for('static', filename='favicon/site.webmanifest') }}">
+</head>
+
+<body class="p-4">
+	<div class="flex flex-row items-center gap-2"">
+		<img class="h-10" src="{{ url_for('static', filename='favicon/android-chrome-192x192.png') }}">
+		<h1>BaradDur</h1>
+		<h6 class="opacity-25 hover:opacity-100 transition transition-opacity duration-700">Your personal all-seeing eye</h6>
+	</div>
+	<div class="breadcrumbs text-sm">
+		<ul>
+		<li>Home</li>
+		</ul>
+	</div>
+	<!-- name of each tab group should be unique -->
+	<div class="tabs tabs-box">
+		<input type="radio" name="my_tabs_6" class="tab" aria-label="Schedule" checked="checked" />
+		<div class="tab-content bg-base-100 border-base-300 p-6">
+			<iframe src="/calendar" class="w-full h-230" frameborder="0"></iframe>
+		</div>
+		<input type="radio" name="my_tabs_6" class="tab" aria-label="Pending Applications" />
+		<div class="tab-content bg-base-100 border-base-300 p-6">
+			{% if pending_allocations %}
+			<div class="flex flex-wrap gap-4 justify-center">
+				{% for section in pending_allocations['payload'] %}
+				{% set border_color = "#002d5a" %}
+				{% if section['subtype']['name'] == 'Alumni/Collaboration' %}
+					{% set border_color = "#d14fda" %}
+				{% elif section['subtype']['name'] == 'Primetime' %}
+					{% set border_color = "#feb93a" %}
+				{% elif section['subtype']['name'] == 'Events' %}
+					{% set border_color = "#d0011b" %}
+				{% elif section['subtype']['name'] == 'Speech' %}
+					{% set border_color = "#2A722B" %}
+				{% elif section['subtype']['name'] == 'News & Sport' %}
+					{% set border_color = "#5A162E" %}
+				{% elif section['subtype']['name'] == 'Specialist Music' %}
+					{% set border_color = "#562179" %}
+				{% endif %}
+				<div class="w-full md:w-[48%] xl:w-[32%] bg-base-100 shadow-md rounded-2xl p-6 border border-base-300 flex flex-col max-h-[550px] max-w-[505px] border-b-15"
+					style="border-bottom: 15px solid {{ border_color }};">
+					<!-- Main content wrapper (flex, scrollable description, fixed bottom) -->
+					<div class="flex-1 flex flex-col overflow-hidden">
+						{% if section['photo'] %}
+						<img src="https://ury.org.uk{{ section['photo'] }}" alt="Show image"
+							class="w-full h-40 object-cover rounded-xl mb-4">
+						{% endif %}
+		
+						<h2 class="text-xl font-semibold text-base-content mb-2">{{ section['title'] }}</h2>
+						<p class="text-sm text-base-content/70 mb-1 overflow-hidden text-ellipsis line-clamp-1">{{ section['credits_string'] }}</p>
+		
+						<!-- Scrollable description -->
+						<div class="flex-1 text-base-content text-sm overflow-auto max-h-[120px] pr-2 mb-3 prose">
+							{{ section['description'] | safe }}
+						</div>
+		
+						<!-- Static metadata and requested time (fixed position) -->
+						<div class="text-sm text-base-content/60 mb-1">
+							<span class="font-medium">Submitted:</span> {{ section['submitted'] }}
+						</div>
+						<div class="text-sm text-base-content/60 mb-1">
+							<span class="font-medium">Requested Time:</span> {{ section['requested_time'] }}
+						</div>
+						<div class="text-sm text-base-content/60">
+							<span class="font-medium">Show Type:</span> {{ section['subtype']['name'] }}
+						</div>
+					</div>
+		
+					<!-- Bottom buttons -->
+					<div class="pt-4 flex justify-end">
+						<div class="join">
+							<a href="/allocate/{{ section['season_id'] }}" class="btn btn-primary join-item">See More</a>
+							<button onclick="rejectSeason(event)" data-season="{{ section['season_id'] }}"
+								data-showname="{{ section['title'] }}" class="btn btn-secondary join-item">
+								Reject
+							</button>
+						</div>
+					</div>
+		
+				</div>
+				{% endfor %}
+			</div>
+		
+			{% else %}
+			<p>No applications!</p>
+			{% endif %}
+		
+		</div>
+		<input type="radio" name="my_tabs_6" class="tab" aria-label="Upcoming Shows" />
+		<div class="tab-content bg-base-100 border-base-300 p-6">Coming soon ... maybe</div>
+		<input type="radio" name="my_tabs_6" class="tab" aria-label="About" />
+		<div class="tab-content bg-base-100 border-base-300 p-6">
+			<div class="flex flex-col gap-2 max-w-xl">
+				<p>Hello!</p>
+				<p>If you've found this you are the programme controller of URY, congrats! or... you're a loser nerd who has permissions to look here. If that's you... watch your step; someone might be very angry with you soon.</p>
+				<p>This is BaradDur, a tool to help you manage your show schedule. It is currently in development so not all features are going to work just yet (or ever perhaps). If you want changes here good luck - no one cares about software for the PC bcs the unfriendly scheduluer basically only impacts one person ever. That's why I wrote this for myself when I was PC because lets face it, no one else was going to.</p>
+				<p>Good luck on your adventure!</p>
+				<p>(maybe dr now??) Colin Roitt, Programme Controller, 2025-2025 (brief but intense)</p>
+			</div>
+		</div>
+	</div>
+
+	<!-- rejection iframe modal -->
+	<div id="rejection-modal" class="modal">
+		<div class="modal-box max-w-screen">
+			<iframe style="width: 50vw; height: 50vh;" src="/reject" frameborder="0"></iframe>
+		</div>
+		<div class="modal-backdrop"></div>
+	</div>
+</body>
+<script>
+	const rejectSeason = (e) => {
+		const seasonId = e.target.dataset.season;
+		const showName = e.target.dataset.showname;
+		const modal = document.getElementById('rejection-modal');
+		// encode seasonid and showname as url params in string
+		const urlParams = new URLSearchParams();
+		urlParams.append('seasonId', seasonId);
+		urlParams.append('showName', showName);
+		modal.querySelector('iframe').src = `/reject?${urlParams.toString()}`;
+		modal.classList.add('modal-open');
+	}
+
+	document.addEventListener("DOMContentLoaded", function() {
+		const modal = document.getElementById('rejection-modal');
+		const closeModal = () => {
+			modal.classList.remove('modal-open');
+			modal.querySelector('iframe').src = '/reject';
+		}
+		modal.querySelector('.modal-backdrop').addEventListener('click', closeModal);
+	});
+</script>
+</html>

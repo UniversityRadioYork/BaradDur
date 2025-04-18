@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Scheduler - Allocate</title>
+	<link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+	<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+	<link href="https://cdn.jsdelivr.net/npm/daisyui@5.0.2/themes.css" rel="stylesheet" type="text/css" />
+  <script type="module" src="https://unpkg.com/cally"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+<body class="p-4 w-full">
+	{% if timeslot %}
+    <div class="flex flex-row justify-between pl-2">
+      <h2>{{ timeslot['title'] }}</h2>
+      <h3>
+        <a 
+          class="btn btn-tertiary btn-sm"
+          href="{{ '/timeslot/' + (timeslot['timeslot_id'] | string )}}"
+          target="_blank">
+          Open in new Tab
+        </a>
+      </h3>
+    </div>
+    <div class="flex flex-row justify-between pb-4 pl-2">
+
+      <h3>{{ timeslot['start_time'] }} - {{ timeslot['duration'] }} hrs</h3>
+      <h3>
+          <a 
+          class="btn btn-tertiary btn-sm"
+          href="{{ 'https://ury.org.uk/schedule/shows/timeslots/' + (timeslot['timeslot_id'] | string )}}"
+          target="_blank">
+          View show page
+        </a>
+      </h3>
+    </div>
+
+    <div class="heading flex gap-3 sm:flex-row flex-col-reverse">
+      <div class="left flex-grow-10 w-full">
+        <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box">
+          <legend class="fieldset-legend">Description</legend>
+          <h2>{{ timeslot['description'] | safe}}</h2>
+        </fieldset>
+        <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box">
+          <legend class="fieldset-legend">Credits</legend>
+          <h2>{{ timeslot['credits_string'] }}</h2>
+        </fieldset>
+        <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box">
+          <legend class="fieldset-legend">Tags</legend>
+          <div class="flex flex-row gap-2">
+            {% for tag in timeslot['tags'] %}
+              <div class="badge badge-neutral badge-soft">{{ tag }}</div>
+            {% endfor %}
+          </div>
+        </fieldset>
+      </div>
+      <div class="left">
+        <div class="avatar">
+          <div class="w-70 rounded">
+            {% if timeslot['photo'] %}
+              <img src="{{ 'https://ury.org.uk/' + timeslot['photo'] }}" />
+            {{ else }}
+              <img src="" />
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="flex gap-5 flex-col md:flex-row">
+
+      <div class="flex fieldset w-full">
+        <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box w-full flex-grow-1">
+          <legend class="fieldset-legend">Cancel Episode</legend>
+          <div class="form-control flex flex-col">
+            <label class="label">
+              <span class="label-text">Reason for cancellation (required)</span>
+            </label>
+            <textarea id="reason" class="textarea textarea-bordered h-24 w-full"></textarea>
+          </div>
+          <label class="label">
+            <span class="label-text">Reason autofill</span>
+          </label>
+          <div class="stock-responses flex flex-row gap-2 flex-wrap">
+            <div class="reason-autofill btn btn-outline btn-info btn-sm rounded-xl">Presenter request</div>
+            <div class="reason-autofill btn btn-outline btn-info btn-sm rounded-xl">Canceled for event coverage</div>
+            <div class="reason-autofill-clear btn btn-outline btn-error btn-sm rounded-xl">Clear</div>
+          </div>
+          <div class="form-control mt-3">
+            <button id="confirm-cancel" class="btn btn-secondary">Cancel Episode</button>
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="flex fieldset w-full">
+        <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box w-full flex-grow-1">
+          <legend class="fieldset-legend">Move Episode</legend>
+          <div class="form-control flex flex-col">
+            <label class="label">
+              <span class="label-text">Start Time</span>
+            </label>
+            <div class="flex flex-row gap-1">
+              <button popovertarget="cally-popover1" class="input input-border" id="cally1" style="anchor-name:--cally1">
+              </button>
+              <div popover id="cally-popover1" class="dropdown bg-base-100 rounded-box shadow-lg" style="position-anchor:--cally1">
+                <calendar-date class="cally" id="new-date-picker" onchange="document.getElementById('cally1').innerText = this.value">
+                  <svg aria-label="Previous" class="fill-current size-4" slot="previous" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.75 19.5 8.25 12l7.5-7.5"></path></svg>
+                  <svg aria-label="Next" class="fill-current size-4" slot="next" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m8.25 4.5 7.5 7.5-7.5 7.5"></path></svg>
+                  <calendar-month></calendar-month>
+                </calendar-date>
+              </div>
+              <input type="time" id="custom-start-time" name="start_time" class="input input-bordered" required>
+            </div>
+          </div>
+          <div class="form-control flex flex-col">
+            <label class="label">
+              <span class="label-text">New Duration (hours)</span>
+            </label>
+            <input type="number" id="new-duration" name="duration" class="input input-bordered" required>
+          </div>
+          <div class="form-control mt-3">
+            <button id="move-episode" class="btn btn-secondary">Move Episode</button>
+          </div>
+      </div>
+
+      
+    </div>  
+
+
+  {% else %}
+    <p>No valid timeslot selected!</p>
+  {% endif %}
+
+
+  <div class="collapse collapse-arrow bg-base-100 border border-base-300">
+    <input type="radio" name="my-accordion-2"/>
+    <div class="collapse-title font-semibold">API Responses</div>
+    <div class="collapse-content text-sm">{{ timeslot }}</div>
+  </div>
+
+  <!-- <meta id="timeslotid" data-timeslotid="1" /> -->
+  <meta id="timeslot_data"
+    data-timeslotid="{{ timeslot['timeslot_id'] }}"
+    data-starttime="{{ timeslot['start_time'] }}"
+    data-duration="{{ timeslot['duration'] }}"
+  />
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const timeSlotMetaData = document.querySelector("#timeslot_data");
+
+      // SETUP MOVE PANEL
+      const moveStartDate = document.querySelector("#cally1");
+      const moveStartTime = document.querySelector("#custom-start-time");
+      const moveDuration = document.querySelector("#new-duration");
+      const moveButton = document.querySelector("#move-episode");
+
+      const currentStartDate = timeSlotMetaData.dataset.starttime.split(' ')[0];
+      moveStartDate.innerText = currentStartDate;
+      const currentStartTime = timeSlotMetaData.dataset.starttime.split(' ')[1];
+      moveStartTime.value = currentStartTime;
+      moveDuration.value = parseInt(timeSlotMetaData.dataset.duration.split(':')[0]);
+      
+      document.querySelector('#new-date-picker').addEventListener('change', (e) => {
+        const selectedDate = e.target.value;
+        const formattedDate = selectedDate.split('-').reverse().join('/');
+        moveStartDate.innerText = formattedDate;
+      });
+
+      // handle move button click - endpoint expects new start time as int and end time as an int we can calculate from duation
+      moveButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        const startDate = moveStartDate.innerText;
+        const startTime = moveStartTime.value;
+        const duration = moveDuration.value;
+
+        if (!startDate || !startTime || !duration) {
+          alert("Please enter a start date, start time and duration");
+          return;
+        }
+
+        const newStartTime = dateStrToObj(`${startDate} ${startTime}`);
+        const newEndTime = new Date(newStartTime.getTime() + (duration * 60 * 60 * 1000));
+        fetch(`/api/move/${timeSlotMetaData.dataset.timeslotid}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ start_time: newStartTime.getTime() / 1000, end_time: newEndTime.getTime() / 1000 })
+        })
+        .then(response => response.json())
+        .then(data => {
+          const { status, payload } = data;
+          if (status === "OK") {
+            alert("Moved successfully");
+          } else {
+            alert("Failed to move: " + String(payload));
+          }
+        })
+        .catch(error => console.error('Error:', error));
+      });
+      
+      // SETUP CANCEL PANEL
+      document.querySelectorAll(".reason-autofill").forEach((button) => {
+        console.log(button);
+        button.addEventListener("click", (e) => {
+          document.querySelector("#reason").value = e.target.innerText;
+        });
+      });
+
+      document.querySelector(".reason-autofill-clear").addEventListener("click", (e) => {
+        if(confirm("Are you sure you want to clear the reason?")) {
+          document.querySelector("#reason").value = "";
+        }
+      });
+
+      document.querySelector("#reason").value = ""
+
+      document.querySelector('#confirm-cancel').addEventListener('click', (e) => {
+        e.preventDefault();
+        const reason = document.querySelector("#reason").value;
+        const timeslotId = timeSlotMetaData.dataset.timeslotid;
+        if (!reason) {
+          alert("Please enter a reason for cancellation");
+          return;
+        }
+        fetch(`/api/cancel/${timeslotId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ reason: reason })
+        })
+        .then(response => response.json())
+        .then(data => {
+          const { status, payload } = data;
+          if (status === "OK") {
+            alert("Cancelled successfully");
+          } else {
+            alert("Failed to cancel: " + String(payload));
+          }
+        })
+        .catch(error => console.error('Error:', error));
+      });
+
+      // expects date in format like 19/02/2025 22:00
+      const dateStrToObj = (dateStr) => {
+        const [date, time] = dateStr.split(' ');
+        const [day, month, year] = date.split('/').map(Number);
+        const [hours, minutes] = time.split(':').map(Number);
+        return new Date(year, month - 1, day, hours, minutes);
+      }
+    });
+  </script>
+</body>
+</html>

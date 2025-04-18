@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Scheduler?</title>
+	<link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+	<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+	<link href="https://cdn.jsdelivr.net/npm/daisyui@5.0.2/themes.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="p-4">
+    <h1 id="show-title"></h1>
+    <div class="form-control flex flex-col">
+        <label class="label">
+            <span class="label-text">Reason for rejection</span>
+        </label>
+        <textarea id="reason" class="textarea textarea-bordered h-24" placeholder="Type here..."></textarea>
+    </div>
+    <div class="form-control mt-6">
+        <button id="confirm-reject" class="btn btn-primary">Confirm Rejection</button>
+    </div>
+    <div class="form-control mt-6">
+        <button id="cancel-reject" class="btn btn-secondary">Cancel</button>
+    </div>
+</body>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // get seasonName from url
+        const urlParams = new URLSearchParams(window.location.search);
+        const showName = urlParams.get('showName');
+        document.querySelector("#show-title").innerText = showName;
+    });
+	const rejectSeason = (e) => {
+		const reason = document.querySelector("#reason").value;
+		const seasonId = urlParams.get('seasonId');
+		fetch(`/api/reject/${seasonId}`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ reason: reason })
+		})
+		.then(response => response.json())
+		.then(data => {
+			const { status, payload } = data;
+			if (status === "OK") {
+				location.reload();
+			} else {
+				alert("Failed to reject: " + String(payload));
+			}
+		})
+		.catch(error => console.error('Error:', error));
+	}
+</script>
+</html>
