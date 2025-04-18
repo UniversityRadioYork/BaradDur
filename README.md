@@ -10,6 +10,7 @@ Not in priority order
 - Make allocation call work on prod
 - List of shows this term
 - Add some links to the right pages of myradio for other bits that come up
+- Make sure login permissions are checked correctly for deployment
 - Change port for deployment
 - Implement tailwind with tailwind CLI for deployment
 
