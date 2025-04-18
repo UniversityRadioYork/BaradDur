@@ -19,6 +19,16 @@ API_KEY = os.environ.get('MYRADIO_API_KEY', "CHANGE_ME")
 HEADERS = {"Authorization": f"Bearer {API_KEY}"}
 KEY_STRING = f"&api_key={API_KEY}"
 
+'''
+Some learnings on the MyRadio API:
+- The documentaion is very unclear often wrong
+- it uses Swagger to expose a bunch of functions in the ServiceAPI folder of MyRadio. 
+- each endpoint has a class and a method so urls are always /class/method
+- the API picks GET PUT POST etc based on the NAME OF THE FUNCTION IN MYRADIO?!!?
+- If the method name starts with get it's get, if it's set its post, otherwise its always put - yes this is weird
+- Getting data into the API is a pain and requires a lot of trial and error see check_for_conflicts for a really cursed example
+'''
+
 def get_all_terms(current_only=False):
     params = "currentOnly=false"
     if current_only:
@@ -76,6 +86,11 @@ def get_timeslot_info(timeslot_id):
     return response.json()
 
 def check_for_conflicts(day, start, duration, term_id = None):
+    '''
+    Lets talk about those url params
+    the PHP method exapects term_id as one param, thats fine. The other param is $time. This is an assoc array. Turns out to get this into php you just write every key out as a param.
+    Again this is a FEATURE OF PHP. So... okay thanks i guess? oh yeah and no one wrote this down anywhere so it was a total pain in the ass to find.
+    '''
     if term_id == None:
         term_id = get_current_term_id()
     time = json.dumps({
