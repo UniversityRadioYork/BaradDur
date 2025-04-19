@@ -1,3 +1,7 @@
+@import "tailwindcss" source(none);
+@source "./public/*.{html,js}";
+@plugin "daisyui";
+
 h1 {
   font-size: 2em;
 }
