@@ -9,6 +9,7 @@ Not in priority order
 - View clashes on custom time slot form update
 - Make allocation call work on prod
 - List of shows this term
+- add refresh button to calendar
 - Add some links to the right pages of myradio for other bits that come up
 - Make sure login permissions are checked correctly for deployment
 - Change port for deployment
