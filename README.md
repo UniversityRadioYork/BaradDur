@@ -34,7 +34,7 @@ Not in priority order
 - Add some links to the right pages of myradio for other bits that come up
 - Make sure login permissions are checked correctly for deployment
 - Change port for deployment
-- Implement tailwind with tailwind CLI for deployment
+- ~~Implement tailwind with tailwind CLI for deployment~~
 
 
 ## Credits
