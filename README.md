@@ -13,7 +13,7 @@ pip install -r requirements.txt
 python main.py
 ```
 
-The server will be live on `127.0.0.1:5000` - check, the port may be different. 
+The server will be live on `127.0.0.1:6339` - check, the port may be different. 
 
 If you change the style.css file, you need to run the following command to update the tailwind CSS:
 
@@ -33,7 +33,7 @@ Not in priority order
 - add refresh button to calendar
 - Add some links to the right pages of myradio for other bits that come up
 - Make sure login permissions are checked correctly for deployment
-- Change port for deployment
+- ~~Change port for deployment~~
 - ~~Implement tailwind with tailwind CLI for deployment~~
 
 

@@ -7,8 +7,10 @@ import urllib3
 
 #Imports ENV variables
 
+port = os.environ.get('PORT', 6339)
+
 #url to redirect to when using jwt auth
-scheduler_url = os.environ.get('SCHEDULER_URL', "http://127.0.0.1:5000/")
+scheduler_url = os.environ.get('SCHEDULER_URL', f"http://127.0.0.1:{port}/")
 
 #key used for myradio jwt auth
 myradio_key = os.environ.get('MYRADIO_SIGNING_KEY', "dev")
@@ -185,7 +187,7 @@ def api_move(timeslot_id):
         return auth_route()
 
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 6339))
     print("Starting server on port " + str(port), file=sys.stderr)
     if dev_mode == "True":
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
