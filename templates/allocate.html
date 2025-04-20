@@ -116,7 +116,7 @@
 
     <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box">
       <legend class="fieldset-legend">Schedule</legend>
-      <iframe src="/calendar" class="w-full h-250" frameborder="0"></iframe>
+      <iframe id="cal-iframe" src="" class="w-full h-250" frameborder="0"></iframe>
     </fieldset>
 
   {% else %}
@@ -132,6 +132,9 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
+      const rootUrl = window.location.origin;
+      document.querySelector("#cal-iframe").src = `${rootUrl}/calendar`;
+
       document.querySelector("#custom-time-form").addEventListener("change", () => {
         const form = document.querySelector("#custom-time-form");
         const day = form.custom_day.value;
