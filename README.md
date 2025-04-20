@@ -4,7 +4,7 @@ We also bring in some admin tools and allow for observations at a glance for if 
 
 # Setup
 
-You can setup this up in docker, but if you want to develop it might be easier to be closer to the metal and run on your machine. Simply install the pyton env and run the the main file. Mkae sure to fill out the an appropriate env file.
+You can setup this up in docker, but if you want to develop it might be easier to be closer to the metal and run on your machine. Simply install the pyton env and run the the main file. Make sure to fill out the an appropriate env file.
 
 ```bash
 npm i
