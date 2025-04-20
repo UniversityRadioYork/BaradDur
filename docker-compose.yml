@@ -1,12 +1,12 @@
 services:
-  scheduler:
-    build: .
-    image: scheduler:latest
-    container_name: scheduler_container
-    volumes:
-      - ./static:/app/static
-      - ./templates:/app/templates
-    ports:
-      - "5042:5042"
-    environment:
-      - MYRADIO_API_KEY=${MYRADIO_API_KEY}
+    scheduler:
+        build: .
+        image: scheduler:latest
+        container_name: scheduler_container
+        volumes:
+            - ./static:/app/static
+            - ./templates:/app/templates
+        ports:
+            - "6339:6339"
+        environment:
+            - MYRADIO_API_KEY=${MYRADIO_API_KEY}

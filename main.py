@@ -1,4 +1,4 @@
-from gevent.pywsgi import WSGIServer
+from waitress import serve
 from flask import Flask, render_template, redirect, session, request
 import os, requests, json, sys, secrets, re, jwt
 from datetime import datetime
@@ -194,5 +194,4 @@ if __name__ == "__main__":
         print("Running in dev mode", file=sys.stderr)
         app.run(debug=True, port=port)
     else:
-        http_server = WSGIServer(('', port), app)
-        http_server.serve_forever()
+        serve(app, host='0.0.0.0',port=port)
