@@ -57,8 +57,9 @@
     <div class="flex flex-row gap-2">
       <h3>page under construction - allocation features do not work</h3>
       <a 
+        id="myradio-link"
         class="btn btn-tertiary btn-sm"
-        href="{{ 'https://ury.org.uk/myradio/Scheduler/allocate/?show_season_id=' + (timeslot['timeslot_id'] | string )}}"
+        href=""
         target="_blank">
         Allocate in MyRadio
       </a>
@@ -143,6 +144,11 @@
       const rootUrl = window.location.origin;
       document.querySelector("#cal-iframe").src = `${rootUrl}/calendar`;
 
+      const seasonId = window.location.pathname.split("/").pop();
+      document.querySelector("#myradio-link").href = `https://ury.org.uk/myradio/Scheduler/allocate/?show_season_id=${seasonId}`
+
+      {{ 'https://ury.org.uk/myradio/Scheduler/allocate/?show_season_id=' + (timeslot['timeslot_id'] | string )}}
+
       document.querySelector("#custom-time-form").addEventListener("change", () => {
         const form = document.querySelector("#custom-time-form");
         const day = form.custom_day.value;
@@ -221,8 +227,6 @@
     }
 
     const submitAllocation = async (data) => {
-      const seasonId = window.location.pathname.split("/").pop();
-
       const response = await fetch(`/api/allocate/${seasonId}`, {
         method: "POST",
         body: JSON.stringify(data),
