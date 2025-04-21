@@ -10,7 +10,6 @@ RUN apk add --no-cache nodejs npm
 # copy the requirements file into the image
 COPY ./requirements.txt /app/requirements.txt
 COPY ./package.json /app/package.json
-COPY ./package-lock.json /app/package-lock.json
 
 # install the dependencies and packages in the requirements file
 RUN pip install -r requirements.txt
