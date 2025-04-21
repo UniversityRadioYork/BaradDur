@@ -1,5 +1,5 @@
 @import "tailwindcss" source(none);
-@source "./public/*.{html,js}";
+@source "./static/templates/*.{html}";
 @plugin "daisyui";
 
 h1 {
