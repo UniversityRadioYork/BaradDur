@@ -109,6 +109,24 @@
                     // window.open(info.event.url, '_blank');
                     showModal(info.event.url);
                 },
+                customButtons: {
+                    customRefresh: {
+                        text: 'Refresh',
+                        click: () => {
+                            calendar.getEvents().forEach(event => {
+                                event.remove();
+                            });
+                            weeksLoaded = [];
+                            loadWeek(week);
+                            loadWeek(week + 1);
+                            loadWeek(week - 1);
+                        }
+                    }
+                },
+                headerToolbar: {
+                    left: 'title',
+                    right: 'customRefresh,today,prev,next',
+                },
             });
             calendar.render();
             // Page navigation - this does some pre-loading too
