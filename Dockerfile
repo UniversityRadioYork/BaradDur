@@ -1,6 +1,9 @@
 # start by pulling the python image
 FROM python:3.11-alpine
 
+# switch working directory
+WORKDIR /app
+
 # install Node
 RUN apk add --no-cache nodejs npm
 
@@ -8,9 +11,6 @@ RUN apk add --no-cache nodejs npm
 COPY ./requirements.txt /app/requirements.txt
 COPY ./package.json /app/package.json
 COPY ./package-lock.json /app/package-lock.json
-
-# switch working directory
-WORKDIR /app
 
 # install the dependencies and packages in the requirements file
 RUN pip install -r requirements.txt
