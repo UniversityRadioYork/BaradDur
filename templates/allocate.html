@@ -125,7 +125,7 @@
 
     <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box">
       <legend class="fieldset-legend">Schedule</legend>
-      <iframe id="cal-iframe" src="" class="w-full h-250" frameborder="0"></iframe>
+      {% include 'calendar.html' %}
     </fieldset>
 
   {% else %}
@@ -141,9 +141,6 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const rootUrl = window.location.origin;
-      document.querySelector("#cal-iframe").src = `${rootUrl}/calendar`;
-
       const seasonId = window.location.pathname.split("/").pop();
       document.querySelector("#myradio-link").href = `https://ury.org.uk/myradio/Scheduler/allocate/?show_season_id=${seasonId}`
 
