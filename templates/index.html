@@ -142,7 +142,8 @@
 			modal.querySelector('iframe').src = '/reject';
 		}
 		modal.querySelector('.modal-backdrop').addEventListener('click', closeModal);
-		const rootUrl = window.location.origin;
+		const rootUrl = window.location.origin.replace('http://', 'https://');
+		console.log(rootUrl);
 		document.querySelector('#cal-iframe').src = `${rootUrl}/calendar`;
 	});
 </script>
