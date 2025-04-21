@@ -54,7 +54,15 @@
       </div>
     </div>
 
-    <h3>page under construction - allocation features do not work</h3>
+    <div class="flex flex-row gap-2">
+      <h3>page under construction - allocation features do not work</h3>
+      <a 
+        class="btn btn-tertiary btn-sm"
+        href="{{ 'https://ury.org.uk/myradio/Scheduler/allocate/?show_season_id=' + (timeslot['timeslot_id'] | string )}}"
+        target="_blank">
+        Allocate in MyRadio
+      </a>
+    </div>
     
     <div class="flex gap-5 flex-col md:flex-row">
       <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box w-full md:w-100 flex-grow-10">
