@@ -147,8 +147,6 @@
       const seasonId = window.location.pathname.split("/").pop();
       document.querySelector("#myradio-link").href = `https://ury.org.uk/myradio/Scheduler/allocate/?show_season_id=${seasonId}`
 
-      {{ 'https://ury.org.uk/myradio/Scheduler/allocate/?show_season_id=' + (timeslot['timeslot_id'] | string )}}
-
       document.querySelector("#custom-time-form").addEventListener("change", () => {
         const form = document.querySelector("#custom-time-form");
         const day = form.custom_day.value;
