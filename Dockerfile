@@ -18,6 +18,7 @@ RUN pip install -r requirements.txt
 COPY . /app
 
 # build CSS
+RUN npm install
 RUN npm run build:css
 
 # configure the container to run in an executed manner
