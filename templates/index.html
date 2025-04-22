@@ -19,7 +19,8 @@
 	<div class="flex flex-row items-center gap-2"">
 		<img class="h-10" src="{{ url_for('static', filename='favicon/android-chrome-192x192.png') }}">
 		<h1>BaradDur</h1>
-		<h6 class="opacity-25 hover:opacity-100 transition transition-opacity duration-700">Your personal all-seeing eye</h6>
+		<h6 id="duhduhduhhh" class="opacity-25 hover:opacity-100 transition transition-opacity duration-700">Your personal all-seeing eye</h6>
+		<audio id="hoverAudio" src="{{ url_for('static', filename='duhduhduhhh.mp3') }}"></audio>
 	</div>
 	<div class="breadcrumbs text-sm">
 		<ul>
@@ -142,6 +143,16 @@
 			modal.querySelector('iframe').src = '/reject';
 		}
 		modal.querySelector('.modal-backdrop').addEventListener('click', closeModal);
+
+		const duhduhduhhh = document.querySelector('#duhduhduhhh');
+		const audio = document.querySelector('#hoverAudio');
+		duhduhduhhh.addEventListener('mouseenter', () => {
+			audio.play();
+		});
+		duhduhduhhh.addEventListener('mouseleave', () => {
+			audio.pause();
+			audio.currentTime = 0;
+		});
 	});
 </script>
 </html>
