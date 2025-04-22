@@ -10,126 +10,128 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.css') }}">
 
 </head>
-<body class="p-4">
-  <div class="flex flex-row items-center gap-2"">
-    <img class="h-10" src="{{ url_for('static', filename='favicon/android-chrome-192x192.png') }}">
-    <h1>BaradDur</h1>
-    <h6 class="opacity-25 hover:opacity-100 transition transition-opacity duration-700">Your personal all-seeing eye</h6>
-  </div>
-  <div class="breadcrumbs text-sm">
-    <ul>
-      <li><a href="/">Home</a></li>
-      {% if page_data %}
-        <li>Application for {{ page_data['show_data']['title'] }}</li>
-      {% else %}
-        <li>Allocate</li>
-      {% endif %}
-    </ul>
-  </div>
-	{% if page_data %}
-    <h2>{{ page_data['show_data']['title'] }}</h2>
+<body class="p-4 flex justify-center">
+  <div class="max-w-[1200px]">
+    <div class="flex flex-row items-center gap-2"">
+      <img class="h-10" src="{{ url_for('static', filename='favicon/android-chrome-192x192.png') }}">
+      <h1>BaradDur</h1>
+      <h6 class="opacity-25 hover:opacity-100 transition transition-opacity duration-700">Your personal all-seeing eye</h6>
+    </div>
+    <div class="breadcrumbs text-sm">
+      <ul>
+        <li><a href="/">Home</a></li>
+        {% if page_data %}
+          <li>Application for {{ page_data['show_data']['title'] }}</li>
+        {% else %}
+          <li>Allocate</li>
+        {% endif %}
+      </ul>
+    </div>
+    {% if page_data %}
+      <h2>{{ page_data['show_data']['title'] }}</h2>
 
-    <div class="heading flex items-center gap-3 sm:flex-row flex-col-reverse">
-      <div class="left flex-grow-10 w-full">
-        <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box">
-          <legend class="fieldset-legend">Description</legend>
-          <h2>{{ page_data['show_data']['description'] | safe}}</h2>
-        </fieldset>
+      <div class="heading flex items-center gap-3 sm:flex-row flex-col-reverse">
+        <div class="left flex-grow-10 w-full">
+          <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box">
+            <legend class="fieldset-legend">Description</legend>
+            <h2>{{ page_data['show_data']['description'] | safe}}</h2>
+          </fieldset>
 
-        <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box">
-          <legend class="fieldset-legend">Credits</legend>
-          <h2>{{ page_data['show_data']['credits_string'] }}</h2>
-        </fieldset>
-      </div>
-      <div class="left">
-        <div class="avatar">
-          <div class="w-70 rounded">
-            {% if page_data['show_data']['photo'] %}
-              <img src="{{ 'https://ury.org.uk/' + page_data['show_data']['photo'] }}" />
-            {{ else }}
-              <img src="https://ury.org.uk/media/image_meta/ShowImageMetadata/offair.png" />
-            {% endif %}
+          <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box">
+            <legend class="fieldset-legend">Credits</legend>
+            <h2>{{ page_data['show_data']['credits_string'] }}</h2>
+          </fieldset>
+        </div>
+        <div class="left">
+          <div class="avatar">
+            <div class="w-70 rounded">
+              {% if page_data['show_data']['photo'] %}
+                <img src="{{ 'https://ury.org.uk/' + page_data['show_data']['photo'] }}" />
+              {{ else }}
+                <img src="https://ury.org.uk/media/image_meta/ShowImageMetadata/offair.png" />
+              {% endif %}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    
-    <div class="flex gap-5 flex-col md:flex-row">
-      <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box w-full md:w-100 flex-grow-10">
-        <legend class="fieldset-legend">Weeks Selected</legend>
-        <div class="flex flex-col h-100">
-          <div class="checkbox-container flex-grow-10">
-            {% for week in page_data['applied_weeks'] %}
-            <label class="fieldset-label pb-2">
-              <input type="checkbox" {{ "checked" if week[0] }} class="checkbox week-checkbox" id="wk{{ week[2] }}" />
-              {{ week[2] }} - {{ week[1] }}
-            </label>
+      
+      <div class="flex gap-5 flex-col md:flex-row">
+        <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box w-full md:w-100 flex-grow-10">
+          <legend class="fieldset-legend">Weeks Selected</legend>
+          <div class="flex flex-col h-100">
+            <div class="checkbox-container flex-grow-10">
+              {% for week in page_data['applied_weeks'] %}
+              <label class="fieldset-label pb-2">
+                <input type="checkbox" {{ "checked" if week[0] }} class="checkbox week-checkbox" id="wk{{ week[2] }}" />
+                {{ week[2] }} - {{ week[1] }}
+              </label>
+              {% endfor %}
+            </div>
+            <a id="changed-week-msg" class="text-red-400 cursor-pointer hover:underline hidden text-center">You have changed the weeks to allocate, reset to requested?</a>
+          </div>
+        </fieldset>
+
+        <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box w-full flex-grow-1">
+          <legend class="fieldset-legend">Times Selected</legend>
+          <div class="flex flex-col gap-5">
+            {% for time in page_data['applied_times'] %}
+              <div class="flex gap-2 flex-col md:flex-row">
+                <div class="div flex flex-row items-center gap-2">
+                  <a onclick="nonCustomTimeAllocation(event)" data-timeslotId="{{ time[id] }}" data-timeslotstring="{{ time['time'] }}" class="btn btn-primary join-item grow-1">Allocate</a>
+                  <!-- <a href="/allocate" class="btn btn-primary join-item grow-1" {{ "disabled" if time['conflict'] }} aria-disabled="{{ 'true' if time['conflict'] else false }}">Allocate</a> -->
+                  <span class="text-base grow-10 whitespace-nowrap">{{ time['time'] }}</span>
+                </div>
+                <div role="alert" class="alert alert-error alert-soft grow-1" {{ "hidden" if not time['conflict']}} aria-hidden="{{ 'true' if time['conflict'] else false }}" >
+                  <span>{{ time['info'] }}</span>
+                </div>
+              </div>
             {% endfor %}
           </div>
-          <a id="changed-week-msg" class="text-red-400 cursor-pointer hover:underline hidden text-center">You have changed the weeks to allocate, reset to requested?</a>
-        </div>
+
+          <div class="divider">Or set custom time</div>
+          
+          <form id="custom-time-form" onsubmit="customTimeAllocation(event)">
+            <input type="hidden" name="custom_time" value="true">
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend">Day</legend>
+              <select class="select" id="custom_day" required>
+                <option disabled selected>Pick a Day</option>
+                <option value="0">Monday</option>
+                <option value="1">Tuesday</option>
+                <option value="2">Wednesday</option>
+                <option value="3">Thursday</option>
+                <option value="4">Friday</option>
+                <option value="5">Saturday</option>
+                <option value="6">Sunday</option>
+              </select>
+            </fieldset>
+            <fieldset class="fieldset flex gap-2 items-center">
+              <legend class="fieldset-legend">Start Time:</legend>
+              <input type="time" id="custom_start_time" name="start_time" class="input input-bordered" required>
+            </fieldset>
+            <fieldset class="fieldset flex gap-2 items-center">
+              <legend class="fieldset-legend">Duration (hours):</legend>
+              <input type="number" id="custom_duration" name="duration" class="input input-bordered" required>
+            </fieldset>
+            <button type="submit" class="btn btn-primary mt-2">Allocate</button>
+          </form>
+        </fieldset>      
+      </div>
+
+      <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box">
+        <legend class="fieldset-legend">Schedule</legend>
+        {% include 'calendar.html' %}
       </fieldset>
 
-      <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box w-full flex-grow-1">
-        <legend class="fieldset-legend">Times Selected</legend>
-        <div class="flex flex-col gap-5">
-          {% for time in page_data['applied_times'] %}
-            <div class="flex gap-2 flex-col md:flex-row">
-              <div class="div flex flex-row items-center gap-2">
-                <a onclick="nonCustomTimeAllocation(event)" data-timeslotId="{{ time[id] }}" data-timeslotstring="{{ time['time'] }}" class="btn btn-primary join-item grow-1">Allocate</a>
-                <!-- <a href="/allocate" class="btn btn-primary join-item grow-1" {{ "disabled" if time['conflict'] }} aria-disabled="{{ 'true' if time['conflict'] else false }}">Allocate</a> -->
-                <span class="text-base grow-10 whitespace-nowrap">{{ time['time'] }}</span>
-              </div>
-              <div role="alert" class="alert alert-error alert-soft grow-1" {{ "hidden" if not time['conflict']}} aria-hidden="{{ 'true' if time['conflict'] else false }}" >
-                <span>{{ time['info'] }}</span>
-              </div>
-            </div>
-          {% endfor %}
-        </div>
+    {% else %}
+      <p>No valid season selected!</p>
+    {% endif %}
 
-        <div class="divider">Or set custom time</div>
-        
-        <form id="custom-time-form" onsubmit="customTimeAllocation(event)">
-          <input type="hidden" name="custom_time" value="true">
-          <fieldset class="fieldset">
-            <legend class="fieldset-legend">Day</legend>
-            <select class="select" id="custom_day" required>
-              <option disabled selected>Pick a Day</option>
-              <option value="0">Monday</option>
-              <option value="1">Tuesday</option>
-              <option value="2">Wednesday</option>
-              <option value="3">Thursday</option>
-              <option value="4">Friday</option>
-              <option value="5">Saturday</option>
-              <option value="6">Sunday</option>
-            </select>
-          </fieldset>
-          <fieldset class="fieldset flex gap-2 items-center">
-            <legend class="fieldset-legend">Start Time:</legend>
-            <input type="time" id="custom_start_time" name="start_time" class="input input-bordered" required>
-          </fieldset>
-          <fieldset class="fieldset flex gap-2 items-center">
-            <legend class="fieldset-legend">Duration (hours):</legend>
-            <input type="number" id="custom_duration" name="duration" class="input input-bordered" required>
-          </fieldset>
-          <button type="submit" class="btn btn-primary mt-2">Allocate</button>
-        </form>
-      </fieldset>      
+    <div class="collapse collapse-arrow bg-base-100 border border-base-300">
+      <input type="radio" name="my-accordion-2" />
+      <div class="collapse-title font-semibold">API Responses</div>
+      <div class="collapse-content text-sm">{{ page_data }}</div>
     </div>
-
-    <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box">
-      <legend class="fieldset-legend">Schedule</legend>
-      {% include 'calendar.html' %}
-    </fieldset>
-
-  {% else %}
-    <p>No valid season selected!</p>
-  {% endif %}
-
-  <div class="collapse collapse-arrow bg-base-100 border border-base-300">
-    <input type="radio" name="my-accordion-2" />
-    <div class="collapse-title font-semibold">API Responses</div>
-    <div class="collapse-content text-sm">{{ page_data }}</div>
   </div>
 
 
