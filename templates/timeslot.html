@@ -45,7 +45,24 @@
         </fieldset>
         <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box">
           <legend class="fieldset-legend">Credits</legend>
-          <h2>{{ timeslot['credits_string'] }}</h2>
+          <div class="pb-3 flex flex-row gap-2 flex-wrap">
+            {% for credit in timeslot['credits'] %}
+              <div class="tooltip">
+                <div class="tooltip-content flex-col flex gap-2 items-center !bg-white !text-black border border-base-300">
+                    <div class="avatar">
+                      <div class="w-24 rounded">
+                        <img src="https://ury.org.uk{{ credit['User']['photo'] }}" />
+                      </div>
+                    </div>
+                    <div class="cont">
+                      <h4> {{ credit['type_name']}} </h4>
+                      <h4> {{ 'Has' if credit['User']['contract_signed'] else 'Hasn\'t' }} signed contract</h4>
+                    </div>
+                </div>
+                <a target="_blank" href="{{ credit['User']['url'] }}" class="badge badge-lg {{ 'badge-neutral' if credit['User']['contract_signed'] else 'badge-error' }} badge-soft">{{ credit['User']['fname'] }} {{ credit['User']['sname'] }}</a>
+              </div>
+            {% endfor %}
+          </div>
         </fieldset>
         <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box">
           <legend class="fieldset-legend">Tags</legend>
