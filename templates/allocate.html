@@ -57,12 +57,17 @@
     <div class="flex gap-5 flex-col md:flex-row">
       <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box w-full md:w-100 flex-grow-10">
         <legend class="fieldset-legend">Weeks Selected</legend>
-          {% for week in page_data['applied_weeks'] %}
-          <label class="fieldset-label">
-            <input type="checkbox" {{ "checked" if week[0] }} class="checkbox week-checkbox" id="wk{{ week[2] }}" />
-            {{ week[2] }} - {{ week[1] }}
-          </label>
-          {% endfor %}
+        <div class="flex flex-col h-100">
+          <div class="checkbox-container flex-grow-10">
+            {% for week in page_data['applied_weeks'] %}
+            <label class="fieldset-label pb-2">
+              <input type="checkbox" {{ "checked" if week[0] }} class="checkbox week-checkbox" id="wk{{ week[2] }}" />
+              {{ week[2] }} - {{ week[1] }}
+            </label>
+            {% endfor %}
+          </div>
+          <a id="changed-week-msg" class="text-red-400 cursor-pointer hover:underline hidden text-center">You have changed the weeks to allocate, reset to requested?</a>
+        </div>
       </fieldset>
 
       <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box w-full flex-grow-1">
@@ -132,6 +137,28 @@
     document.addEventListener("DOMContentLoaded", () => {
       const seasonId = window.location.pathname.split("/").pop();
 
+      const changedWeekMsg = document.querySelector("#changed-week-msg");
+      const weekCheckboxes = [...document.querySelectorAll(".week-checkbox")];
+      const checkStatesInit = weekCheckboxes.map(checkbox => checkbox.checked);
+
+      // if any of the week checkboxes are checked and are different from how they were at the start of page load, show the messgae
+      weekCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener("change", () => {
+          let currCheckStates = weekCheckboxes.map(checkbox => checkbox.checked);
+          if (currCheckStates.some((state, index) => state !== checkStatesInit[index])) {
+            changedWeekMsg.classList.remove("hidden");
+          } else {
+            changedWeekMsg.classList.add("hidden");
+          }
+        });
+      });
+
+      changedWeekMsg.addEventListener("click", () => {
+        for(let i = 0; i < weekCheckboxes.length; i++) {
+          weekCheckboxes[i].checked = checkStatesInit[i];
+        }
+        changedWeekMsg.classList.add("hidden");
+      });
 
       document.querySelector("#custom-time-form").addEventListener("change", () => {
         const form = document.querySelector("#custom-time-form");
@@ -211,6 +238,7 @@
     }
 
     const submitAllocation = async (data) => {
+      const seasonId = window.location.pathname.split("/").pop();
       const response = await fetch(`/api/allocate/${seasonId}`, {
         method: "POST",
         body: JSON.stringify(data),
