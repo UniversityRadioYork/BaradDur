@@ -122,9 +122,10 @@ def schedule_season(season_id, data, headers):
     print("HAVE ALLOCATED: ", response.text)
     return response.json()
 
-def reject_season(season_id, reason, headers):
+def reject_season(season_id, reason, notify_user, headers):
     data = {
-        "reason": reason
+        "reason": reason,
+        "notify_user": notify_user
     }
     data_to_send = json.dumps(data)
     response = requests.put(f"{BASE_URL}/season/{season_id}/reject?" + KEY_STRING, data=data_to_send, headers=headers, verify=should_verify)

@@ -134,9 +134,10 @@ def api_allocate(season_id):
 @app.route('/api/reject/<season_id>', methods=['POST'])
 def api_reject(season_id):
     if verifySession(session):
-        reason = request.get_json()
-        reason = reason['reason']
-        res = reject_season(season_id, reason, request.headers)
+        req = request.get_json()
+        reason = req['reason']
+        notify_user = req['notify_user']
+        res = reject_season(season_id, reason, notify_user, request.headers)
         return res
     else:
         return auth_route()

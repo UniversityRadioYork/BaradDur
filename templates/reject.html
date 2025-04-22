@@ -18,11 +18,13 @@
         </label>
         <textarea id="reason" class="textarea textarea-bordered h-24" placeholder="Type here..."></textarea>
     </div>
-    <div class="form-control mt-6">
-        <button id="confirm-reject" class="btn btn-primary">Confirm Rejection</button>
-    </div>
-    <div class="form-control mt-6">
-        <button id="cancel-reject" class="btn btn-secondary">Cancel</button>
+	<div class="form-control mt-6">
+		<label class="cursor-pointer label">
+			<span class="label-text">Notify user</span> 
+			<input type="checkbox" id="notify_user" class="toggle toggle-primary" checked />
+		</label>	 	
+    <div class="form-control mt-6 flex justify-end">
+        <button id="confirm-reject" class="btn btn-primary">Reject</button>
     </div>
 </body>
 <script>
@@ -30,28 +32,35 @@
         // get seasonName from url
         const urlParams = new URLSearchParams(window.location.search);
         const showName = urlParams.get('showName');
-        document.querySelector("#show-title").innerText = showName;
+        document.querySelector("#show-title").innerText = `Rejecting season of ${showName}`;
+		const rejectSeason = (e) => {
+			const reason = document.querySelector("#reason").value;
+			const seasonId = urlParams.get('seasonId');
+			const notifyUser = document.querySelector("#notify_user").checked;
+			fetch(`/api/reject/${seasonId}`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ 
+					reason: reason,
+					notify_user: notifyUser
+				})
+			})
+			.then(response => response.json())
+			.then(data => {
+				const { status, payload } = data;
+				if (status === "OK") {
+					alert('Successfully rejected season: ' + String(payload));
+				} else {
+					alert("Failed to reject: " + String(payload));
+				}
+			})
+			.catch(error => console.error('Error:', error));
+		}
+
+		document.querySelector("#confirm-reject").addEventListener("click", rejectSeason);
+
     });
-	const rejectSeason = (e) => {
-		const reason = document.querySelector("#reason").value;
-		const seasonId = urlParams.get('seasonId');
-		fetch(`/api/reject/${seasonId}`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({ reason: reason })
-		})
-		.then(response => response.json())
-		.then(data => {
-			const { status, payload } = data;
-			if (status === "OK") {
-				location.reload();
-			} else {
-				alert("Failed to reject: " + String(payload));
-			}
-		})
-		.catch(error => console.error('Error:', error));
-	}
 </script>
 </html>
