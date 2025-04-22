@@ -106,12 +106,16 @@ def check_for_conflicts(day, start, duration, term_id = None):
 # -------- put --------
 
 def schedule_season(season_id, data, headers):
-    #num_weeks = sum([1 for week in data['weeks'] if data['weeks'][week] == 1])
-    data["timecustom_etime"] = 3600
     num_weeks = len(data['weeks'])
     data_to_send = json.dumps({
         'num_weeks': num_weeks,
-        'params': data
+        'params': {
+            'weeks': data['weeks'],
+            'time': data['time'],
+            'timecustom_day': data['timecustom_day'],
+            'timecustom_stime': data['timecustom_stime'],
+            'timecustom_etime': data['timecustom_etime']
+        }
     })
     print(data_to_send, season_id)
     response = requests.put(f"{BASE_URL}/season/{season_id}/schedule?" + KEY_STRING, data=data_to_send, headers=headers, verify=should_verify)
