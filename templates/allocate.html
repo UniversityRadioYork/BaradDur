@@ -53,17 +53,6 @@
         </div>
       </div>
     </div>
-
-    <div class="flex flex-row gap-2">
-      <h3>page under construction - allocation features do not work</h3>
-      <a 
-        id="myradio-link"
-        class="btn btn-tertiary btn-sm"
-        href=""
-        target="_blank">
-        Allocate in MyRadio
-      </a>
-    </div>
     
     <div class="flex gap-5 flex-col md:flex-row">
       <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box w-full md:w-100 flex-grow-10">
@@ -142,7 +131,7 @@
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const seasonId = window.location.pathname.split("/").pop();
-      document.querySelector("#myradio-link").href = `https://ury.org.uk/myradio/Scheduler/allocate/?show_season_id=${seasonId}`
+
 
       document.querySelector("#custom-time-form").addEventListener("change", () => {
         const form = document.querySelector("#custom-time-form");
