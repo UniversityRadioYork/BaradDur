@@ -24,8 +24,7 @@
         </a>
       </h3>
     </div>
-    <div class="flex flex-row justify-between pb-4 pl-2">
-
+    <div class="flex flex-row justify-between pl-2">
       <h3>{{ timeslot['start_time'] }} - {{ timeslot['duration'] }} hrs</h3>
       <h3>
           <a 
@@ -35,6 +34,9 @@
           View show page
         </a>
       </h3>
+    </div>
+    <div class="flex flex-row justify-between pb-4 pl-2">
+      <h3>Type: {{ timeslot['subtype']['name'] }}</h3>
     </div>
 
     <div class="heading flex gap-3 sm:flex-row flex-col-reverse">
