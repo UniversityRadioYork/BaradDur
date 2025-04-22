@@ -75,7 +75,7 @@
           </div>
         </fieldset>
       </div>
-      <div class="left">
+      <div class="left flex items-center flex-col gap-3">
         <div class="avatar">
           <div class="w-70 rounded">
             {% if timeslot['photo'] %}
@@ -85,6 +85,12 @@
             {% endif %}
           </div>
         </div>
+        <a 
+          class="btn btn-tertiary btn-sm"
+          href="https://ury.org.uk/myradio/Scheduler/editShow/?showid={{ timeslot['show_id'] }}"
+          target="_blank">
+          Edit Show on MyRadio
+        </a>
       </div>
     </div>
 
