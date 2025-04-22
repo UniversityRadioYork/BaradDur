@@ -165,7 +165,6 @@
         const day = form.custom_day.value;
         const start = form.start_time.value;
         const duration = form.duration.value;
-        console.log(day, start, duration, "hello");
         if (day && start && duration) {
           // startTimestamp = new Date(`2021-01-01T${start}:00`).getTime() / 1000;
           // endTimestamp = startTimestamp + duration * 60 * 60;
@@ -199,10 +198,8 @@
 
     const nonCustomTimeAllocation = async (e) => {
       e.preventDefault();
-      console.log(e.target)
       const timeslotId = e.target.dataset.timeslotId;
       const timeslotString = e.target.dataset.timeslotstring;
-      console.log(timeslotId, timeslotString);
       const data = {};
       data["weeks"] = getWeeks();
       data["time"] = -1;
