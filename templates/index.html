@@ -35,8 +35,15 @@
 		</div>
 		<input type="radio" name="my_tabs_6" class="tab" aria-label="Pending Applications" />
 		<div class="tab-content bg-base-100 border-base-300 p-6">
+			<div id="view-control" class="pb-4">
+				<label class="label">
+					Grid View
+					<input id="view-toggle" type="checkbox" class="toggle toggle-xl" />
+					List View
+				</label>
+			</div>
 			{% if pending_allocations %}
-			<div class="flex flex-wrap gap-4 justify-center">
+			<div id="grid-view" class="flex flex-wrap gap-4 justify-center">
 				{% for section in pending_allocations['payload'] %}
 				{% set border_color = "#002d5a" %}
 				{% if section['subtype']['name'] == 'Alumni/Collaboration' %}
@@ -95,6 +102,70 @@
 				</div>
 				{% endfor %}
 			</div>
+
+			<div id="list-view" class="flex flex-col gap-4 items-center hidden">
+				{% for section in pending_allocations['payload'] %}
+				{% set border_color = "#002d5a" %}
+				{% if section['subtype']['name'] == 'Alumni/Collaboration' %}
+					{% set border_color = "#d14fda" %}
+				{% elif section['subtype']['name'] == 'Primetime' %}
+					{% set border_color = "#feb93a" %}
+				{% elif section['subtype']['name'] == 'Events' %}
+					{% set border_color = "#d0011b" %}
+				{% elif section['subtype']['name'] == 'Speech' %}
+					{% set border_color = "#2A722B" %}
+				{% elif section['subtype']['name'] == 'News & Sport' %}
+					{% set border_color = "#5A162E" %}
+				{% elif section['subtype']['name'] == 'Specialist Music' %}
+					{% set border_color = "#562179" %}
+				{% endif %}
+
+				<div class="w-full bg-base-100 shadow-md rounded-2xl p-4 border border-base-300 flex flex-row gap-4 items-start border-l-[12px] max-w-[1400px]"
+					style="border-left-color: {{ border_color }};">
+
+					{% if section['photo'] %}
+					<img src="https://ury.org.uk{{ section['photo'] }}" alt="Show image"
+						class="w-36 h-36 object-cover rounded-xl flex-shrink-0">
+					{% endif %}
+
+					<div class="flex-1 flex flex-col overflow-hidden">
+						<h2 class="text-lg font-semibold text-base-content mb-1">{{ section['title'] }}</h2>
+						<p class="text-sm text-base-content/70 mb-1">{{ section['credits_string'] }}</p>
+
+						<!-- Description -->
+						<div class="text-base-content text-sm overflow-hidden text-ellipsis line-clamp-2 mb-2 prose">
+							{{ section['description'] | safe }}
+						</div>
+
+						<!-- Metadata -->
+						<div class="flex flex-row gap-4 justify-between">
+							<div class="flex flex-row gap-4">
+								<div class="text-sm text-base-content/60 mb-1">
+									<span class="font-medium">Submitted:</span> {{ section['submitted'] }}
+								</div>
+								<div class="text-sm text-base-content/60 mb-1">
+									<span class="font-medium">Requested Time:</span> {{ section['requested_time'] }}
+								</div>
+								<div class="text-sm text-base-content/60 mb-1">
+									<span class="font-medium">Show Type:</span> {{ section['subtype']['name'] }}
+								</div>
+							</div>
+							<!-- Buttons -->
+							<div class="mt-auto pt-2 flex justify-end">
+								<div class="join">
+									<a href="/allocate/{{ section['season_id'] }}" class="btn btn-primary btn-md join-item">See More</a>
+									<button onclick="rejectSeason(event)" data-season="{{ section['season_id'] }}"
+										data-showname="{{ section['title'] }}" class="btn btn-secondary btn-md join-item">
+										Reject
+									</button>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				{% endfor %}
+			</div>
 		
 			{% else %}
 			<p>No applications!</p>
@@ -143,6 +214,22 @@
 			modal.querySelector('iframe').src = '/reject';
 		}
 		modal.querySelector('.modal-backdrop').addEventListener('click', closeModal);
+
+		const viewToggle = document.querySelector('#view-toggle');
+		const gridView = document.querySelector('#grid-view');
+		const listView = document.querySelector('#list-view');
+		const setView = () => {
+			if (viewToggle.checked) {
+				gridView.classList.add('hidden');
+				listView.classList.remove('hidden');
+			} else {
+				gridView.classList.remove('hidden');
+				listView.classList.add('hidden');
+			}
+		}
+
+		viewToggle.addEventListener('change', () => setView());
+		setView();
 
 		const duhduhduhhh = document.querySelector('#duhduhduhhh');
 		const audio = document.querySelector('#hoverAudio');
