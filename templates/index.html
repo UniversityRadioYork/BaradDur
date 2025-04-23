@@ -29,11 +29,20 @@
 	</div>
 	<!-- name of each tab group should be unique -->
 	<div class="tabs tabs-box">
-		<input type="radio" name="my_tabs_6" class="tab" aria-label="Schedule" checked="checked" />
+		<label class="tab">
+			<input type="radio" name="my_tabs_6" />
+			Schedule
+		</label>
 		<div class="tab-content bg-base-100 border-base-300 p-6">
 			{% include 'calendar.html' %}
 		</div>
-		<input type="radio" name="my_tabs_6" class="tab" aria-label="Pending Applications" />
+		<label class="tab">
+			<input type="radio" name="my_tabs_6" />
+			Pending Applications
+			{% if pending_allocations['payload']|length > 0 %}
+				<span class="indicator-item badge badge-secondary badge-md ml-2">{{ pending_allocations['payload']|length }}</span>
+			{% endif %}
+		</label>
 		<div class="tab-content bg-base-100 border-base-300 p-6">
 			<div id="view-control" class="pb-4">
 				<label class="label">
@@ -172,9 +181,15 @@
 			{% endif %}
 		
 		</div>
-		<input type="radio" name="my_tabs_6" class="tab" aria-label="Upcoming Shows" />
+		<label class="tab">
+			<input type="radio" name="my_tabs_6" />
+			Upcoming Shows
+		</label>
 		<div class="tab-content bg-base-100 border-base-300 p-6">Coming soon ... maybe</div>
-		<input type="radio" name="my_tabs_6" class="tab" aria-label="About" />
+		<label class="tab">
+			<input type="radio" name="my_tabs_6" />
+			About
+		</label>
 		<div class="tab-content bg-base-100 border-base-300 p-6">
 			<div class="flex flex-col gap-2 max-w-xl">
 				<p>Hello!</p>
