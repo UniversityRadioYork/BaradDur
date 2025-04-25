@@ -34,7 +34,7 @@ def get_all_terms(current_only=False):
     if current_only:
         params = "currentOnly=true"
     response = requests.get(f"{BASE_URL}/term/allterms?" + params + KEY_STRING, verify=should_verify)
-    print(response.text)
+    # print(response.text)
     return response.json()
 
 def get_current_term_id():
@@ -51,7 +51,7 @@ def get_show_application(season_id):
 
 def get_season_applied_weeks(season_id):
     response = requests.get(f"{BASE_URL}/season/{season_id}/requestedweeks?" + KEY_STRING, verify=should_verify)
-    print(response.text)
+    # print(response.text)
     weeks_applied_index = response.json()["payload"]
     term = get_all_terms(current_only=False)["payload"][-1]
     week_names = term["week_names"]
@@ -67,29 +67,29 @@ def get_season_applied_weeks(season_id):
 
 def get_season_applied_times(season_id):
     response = requests.get(f"{BASE_URL}/season/{season_id}/requestedtimesavail?" + KEY_STRING, verify=should_verify)
-    print(response.text)
+    # print(response.text)
     times = response.json()["payload"]
     return times
 
 def count_pending_allocations():
     response = requests.get(f"{BASE_URL}/scheduler/countpendingallocations?" + KEY_STRING, verify=should_verify)
-    print(response.text)
+    # print(response.text)
     return response.json()
 
 def pending_allocations():
     req_url = f"{BASE_URL}/scheduler/pendingallocations?" + KEY_STRING
     response = requests.get(req_url, verify=should_verify)
-    print(response.text)
+    # print(response.text)
     return response.json()
 
 def get_schedule(year, week):
     response = requests.get(f"{BASE_URL}/timeslot/weekschedule/{week}?year={year}" + KEY_STRING, verify=should_verify)
-    print(response.text)
+    # print(response.text)
     return response.json()
 
 def get_timeslot_info(timeslot_id):
     response = requests.get(f"{BASE_URL}/timeslot/{timeslot_id}?" + KEY_STRING, verify=should_verify)
-    print(response.text)
+    # print(response.text)
     return response.json()
 
 def check_for_conflicts(day, start, duration, term_id = None):
@@ -153,5 +153,6 @@ def move_timeslot(timeslot_id, new_start, new_end, headers):
     }
     data_to_send = json.dumps(data)
     response = requests.put(f"{BASE_URL}/timeslot/{timeslot_id}/movetimeslot?" + KEY_STRING, data=data_to_send, headers=headers, verify=should_verify)
+    print("MOVE HAS RESPONDED: ", f"{BASE_URL}/timeslot/{timeslot_id}/movetimeslot?")
     print(response.text)
     return response.json()
