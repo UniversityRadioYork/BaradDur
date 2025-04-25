@@ -114,7 +114,7 @@
                 <div class="flex gap-2 flex-col md:flex-row">
                   <div class="div flex flex-row items-center gap-2">
                     <a onclick="nonCustomTimeAllocation(event)" data-timeslotId="{{ time[id] }}" data-timeslotstring="{{ time['time'] }}" class="btn btn-primary join-item grow-1 allocation-button">
-                      <span class="text">Allocate</span>
+                      <span class="text" data-timeslotId="{{ time[id] }}" data-timeslotstring="{{ time['time'] }}" >Allocate</span>
                       <span class="throbber hidden">
                         <span class="loading loading-dots loading-sm"></span>
                       </span>
@@ -246,8 +246,10 @@
 
       const nonCustomTimeAllocation = async (e) => {
         e.preventDefault();
+        console.log("🚀 ~ nonCustomTimeAllocation ~ e:", e)
         const timeslotId = e.target.dataset.timeslotId;
         const timeslotString = e.target.dataset.timeslotstring;
+        console.log("🚀 ~ nonCustomTimeAllocation ~ timeslotString:", timeslotString)
         const data = {};
         data["weeks"] = getWeeks();
         data["time"] = -1;
