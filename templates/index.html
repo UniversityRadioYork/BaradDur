@@ -15,198 +15,200 @@
 	<link rel="manifest" href="{{ url_for('static', filename='favicon/site.webmanifest') }}">
 </head>
 
-<body class="p-4">
-	<div class="flex flex-row items-center gap-2"">
-		<img class="h-10" src="{{ url_for('static', filename='favicon/android-chrome-192x192.png') }}">
-		<h1>BaradDur</h1>
-		<h6 id="duhduhduhhh" class="opacity-25 hover:opacity-100 transition transition-opacity duration-700">Your personal all-seeing eye</h6>
-		<audio id="hoverAudio" src="{{ url_for('static', filename='duhduhduhhh.mp3') }}"></audio>
-	</div>
-	<div class="breadcrumbs text-sm">
-		<ul>
-		<li>Home</li>
-		</ul>
-	</div>
-	<!-- name of each tab group should be unique -->
-	<div class="tabs tabs-box">
-		<label class="tab">
-			<input type="radio" name="my_tabs_6" checked/>
-			Schedule
-		</label>
-		<div class="tab-content bg-base-100 border-base-300 p-6">
-			{% include 'calendar.html' %}
+<body>
+	<div class="p-4">
+		<div class="flex flex-row items-center gap-2"">
+			<img class="h-10" src="{{ url_for('static', filename='favicon/android-chrome-192x192.png') }}">
+			<h1>BaradDur</h1>
+			<h6 id="duhduhduhhh" class="opacity-25 hover:opacity-100 transition transition-opacity duration-700">Your personal all-seeing eye</h6>
+			<audio id="hoverAudio" src="{{ url_for('static', filename='duhduhduhhh.mp3') }}"></audio>
 		</div>
-		<label class="tab">
-			<input type="radio" name="my_tabs_6" />
-			Pending Applications
-			{% if pending_allocations['payload']|length > 0 %}
-				<span class="indicator-item badge badge-secondary badge-md ml-2">{{ pending_allocations['payload']|length }}</span>
-			{% endif %}
-		</label>
-		<div class="tab-content bg-base-100 border-base-300 p-6">
-			<div id="view-control" class="pb-4">
-				<label class="label">
-					Grid View
-					<input id="view-toggle" type="checkbox" class="toggle toggle-xl" />
-					List View
-				</label>
+		<div class="breadcrumbs text-sm">
+			<ul>
+			<li>Home</li>
+			</ul>
+		</div>
+		<!-- name of each tab group should be unique -->
+		<div class="tabs tabs-box">
+			<label class="tab">
+				<input type="radio" name="my_tabs_6" checked/>
+				Schedule
+			</label>
+			<div class="tab-content bg-base-100 border-base-300 p-6">
+				{% include 'calendar.html' %}
 			</div>
-			{% if pending_allocations %}
-			<div id="grid-view" class="flex flex-wrap gap-4 justify-center">
-				{% for section in pending_allocations['payload'] %}
-				{% set border_color = "#002d5a" %}
-				{% if section['subtype']['name'] == 'Alumni/Collaboration' %}
-					{% set border_color = "#d14fda" %}
-				{% elif section['subtype']['name'] == 'Primetime' %}
-					{% set border_color = "#feb93a" %}
-				{% elif section['subtype']['name'] == 'Events' %}
-					{% set border_color = "#d0011b" %}
-				{% elif section['subtype']['name'] == 'Speech' %}
-					{% set border_color = "#2A722B" %}
-				{% elif section['subtype']['name'] == 'News & Sport' %}
-					{% set border_color = "#5A162E" %}
-				{% elif section['subtype']['name'] == 'Specialist Music' %}
-					{% set border_color = "#562179" %}
+			<label class="tab">
+				<input type="radio" name="my_tabs_6" />
+				Pending Applications
+				{% if pending_allocations['payload']|length > 0 %}
+					<span class="indicator-item badge badge-secondary badge-md ml-2">{{ pending_allocations['payload']|length }}</span>
 				{% endif %}
-				<div class="w-full md:w-[48%] xl:w-[32%] bg-base-100 shadow-md rounded-2xl p-6 border border-base-300 flex flex-col max-h-[550px] max-w-[505px] border-b-15"
-					style="border-bottom: 15px solid {{ border_color }};">
-					<!-- Main content wrapper (flex, scrollable description, fixed bottom) -->
-					<div class="flex-1 flex flex-col overflow-hidden">
-						{% if section['photo'] %}
-						<img src="https://ury.org.uk{{ section['photo'] }}" alt="Show image"
-							class="w-full h-40 object-cover rounded-xl mb-4">
-						{% endif %}
-		
-						<h2 class="text-xl font-semibold text-base-content mb-2">{{ section['title'] }}</h2>
-						<p class="text-sm text-base-content/70 mb-1 overflow-hidden text-ellipsis line-clamp-1">{{ section['credits_string'] }}</p>
-		
-						<!-- Scrollable description -->
-						<div class="flex-1 text-base-content text-sm overflow-auto max-h-[120px] pr-2 mb-3 prose">
-							{{ section['description'] | safe }}
-						</div>
-		
-						<!-- Static metadata and requested time (fixed position) -->
-						<div class="text-sm text-base-content/60 mb-1">
-							<span class="font-medium">Submitted:</span> {{ section['submitted'] }}
-						</div>
-						<div class="text-sm text-base-content/60 mb-1">
-							<span class="font-medium">Requested Time:</span> {{ section['requested_time'] }}
-						</div>
-						<div class="text-sm text-base-content/60">
-							<span class="font-medium">Show Type:</span> {{ section['subtype']['name'] }}
-						</div>
-					</div>
-		
-					<!-- Bottom buttons -->
-					<div class="pt-4 flex justify-end">
-						<div class="join">
-							<a target="_blank" href="/allocate/{{ section['season_id'] }}" class="btn btn-primary join-item">See More</a>
-							<button onclick="rejectSeason(event)" data-season="{{ section['season_id'] }}"
-								data-showname="{{ section['title'] }}" class="btn btn-secondary join-item">
-								Reject
-							</button>
-						</div>
-					</div>
-		
+			</label>
+			<div class="tab-content bg-base-100 border-base-300 p-6">
+				<div id="view-control" class="pb-4">
+					<label class="label">
+						Grid View
+						<input id="view-toggle" type="checkbox" class="toggle toggle-xl" />
+						List View
+					</label>
 				</div>
-				{% endfor %}
-			</div>
+				{% if pending_allocations %}
+				<div id="grid-view" class="flex flex-wrap gap-4 justify-center">
+					{% for section in pending_allocations['payload'] %}
+					{% set border_color = "#002d5a" %}
+					{% if section['subtype']['name'] == 'Alumni/Collaboration' %}
+						{% set border_color = "#d14fda" %}
+					{% elif section['subtype']['name'] == 'Primetime' %}
+						{% set border_color = "#feb93a" %}
+					{% elif section['subtype']['name'] == 'Events' %}
+						{% set border_color = "#d0011b" %}
+					{% elif section['subtype']['name'] == 'Speech' %}
+						{% set border_color = "#2A722B" %}
+					{% elif section['subtype']['name'] == 'News & Sport' %}
+						{% set border_color = "#5A162E" %}
+					{% elif section['subtype']['name'] == 'Specialist Music' %}
+						{% set border_color = "#562179" %}
+					{% endif %}
+					<div class="w-full md:w-[48%] xl:w-[32%] bg-base-100 shadow-md rounded-2xl p-6 border border-base-300 flex flex-col max-h-[550px] max-w-[505px] border-b-15"
+						style="border-bottom: 15px solid {{ border_color }};">
+						<!-- Main content wrapper (flex, scrollable description, fixed bottom) -->
+						<div class="flex-1 flex flex-col overflow-hidden">
+							{% if section['photo'] %}
+							<img src="https://ury.org.uk{{ section['photo'] }}" alt="Show image"
+								class="w-full h-40 object-cover rounded-xl mb-4">
+							{% endif %}
+			
+							<h2 class="text-xl font-semibold text-base-content mb-2">{{ section['title'] }}</h2>
+							<p class="text-sm text-base-content/70 mb-1 overflow-hidden text-ellipsis line-clamp-1">{{ section['credits_string'] }}</p>
+			
+							<!-- Scrollable description -->
+							<div class="flex-1 text-base-content text-sm overflow-auto max-h-[120px] pr-2 mb-3 prose">
+								{{ section['description'] | safe }}
+							</div>
+			
+							<!-- Static metadata and requested time (fixed position) -->
+							<div class="text-sm text-base-content/60 mb-1">
+								<span class="font-medium">Submitted:</span> {{ section['submitted'] }}
+							</div>
+							<div class="text-sm text-base-content/60 mb-1">
+								<span class="font-medium">Requested Time:</span> {{ section['requested_time'] }}
+							</div>
+							<div class="text-sm text-base-content/60">
+								<span class="font-medium">Show Type:</span> {{ section['subtype']['name'] }}
+							</div>
+						</div>
+			
+						<!-- Bottom buttons -->
+						<div class="pt-4 flex justify-end">
+							<div class="join">
+								<a target="_blank" href="/allocate/{{ section['season_id'] }}" class="btn btn-primary join-item">See More</a>
+								<button onclick="rejectSeason(event)" data-season="{{ section['season_id'] }}"
+									data-showname="{{ section['title'] }}" class="btn btn-secondary join-item">
+									Reject
+								</button>
+							</div>
+						</div>
+			
+					</div>
+					{% endfor %}
+				</div>
 
-			<div id="list-view" class="flex flex-col gap-4 items-center hidden">
-				{% for section in pending_allocations['payload'] %}
-				{% set border_color = "#002d5a" %}
-				{% if section['subtype']['name'] == 'Alumni/Collaboration' %}
-					{% set border_color = "#d14fda" %}
-				{% elif section['subtype']['name'] == 'Primetime' %}
-					{% set border_color = "#feb93a" %}
-				{% elif section['subtype']['name'] == 'Events' %}
-					{% set border_color = "#d0011b" %}
-				{% elif section['subtype']['name'] == 'Speech' %}
-					{% set border_color = "#2A722B" %}
-				{% elif section['subtype']['name'] == 'News & Sport' %}
-					{% set border_color = "#5A162E" %}
-				{% elif section['subtype']['name'] == 'Specialist Music' %}
-					{% set border_color = "#562179" %}
-				{% endif %}
-
-				<div class="w-full bg-base-100 shadow-md rounded-2xl p-4 border border-base-300 flex flex-row gap-4 items-start border-l-[12px] max-w-[1400px]"
-					style="border-left-color: {{ border_color }};">
-
-					{% if section['photo'] %}
-					<img src="https://ury.org.uk{{ section['photo'] }}" alt="Show image"
-						class="w-36 h-36 object-cover rounded-xl flex-shrink-0">
+				<div id="list-view" class="flex flex-col gap-4 items-center hidden">
+					{% for section in pending_allocations['payload'] %}
+					{% set border_color = "#002d5a" %}
+					{% if section['subtype']['name'] == 'Alumni/Collaboration' %}
+						{% set border_color = "#d14fda" %}
+					{% elif section['subtype']['name'] == 'Primetime' %}
+						{% set border_color = "#feb93a" %}
+					{% elif section['subtype']['name'] == 'Events' %}
+						{% set border_color = "#d0011b" %}
+					{% elif section['subtype']['name'] == 'Speech' %}
+						{% set border_color = "#2A722B" %}
+					{% elif section['subtype']['name'] == 'News & Sport' %}
+						{% set border_color = "#5A162E" %}
+					{% elif section['subtype']['name'] == 'Specialist Music' %}
+						{% set border_color = "#562179" %}
 					{% endif %}
 
-					<div class="flex-1 flex flex-col overflow-hidden">
-						<h2 class="text-lg font-semibold text-base-content mb-1">{{ section['title'] }}</h2>
-						<p class="text-sm text-base-content/70 mb-1">{{ section['credits_string'] }}</p>
+					<div class="w-full bg-base-100 shadow-md rounded-2xl p-4 border border-base-300 flex flex-row gap-4 items-start border-l-[12px] max-w-[1400px]"
+						style="border-left-color: {{ border_color }};">
 
-						<!-- Description -->
-						<div class="text-base-content text-sm overflow-hidden text-ellipsis line-clamp-2 mb-2 prose hidden sm:block">
-							{{ section['description'] | safe }}
-						</div>
+						{% if section['photo'] %}
+						<img src="https://ury.org.uk{{ section['photo'] }}" alt="Show image"
+							class="w-36 h-36 object-cover rounded-xl flex-shrink-0">
+						{% endif %}
 
-						<!-- Metadata -->
-						<div class="flex flex-col md:flex-row gap-4 justify-between">
-							<div class="flex flex-col sm:flex-row gap-0 sm:gap-4">
-								<div class="text-sm text-base-content/60 mb-1">
-									<span class="font-medium">Submitted:</span> {{ section['submitted'] }}
+						<div class="flex-1 flex flex-col overflow-hidden">
+							<h2 class="text-lg font-semibold text-base-content mb-1">{{ section['title'] }}</h2>
+							<p class="text-sm text-base-content/70 mb-1">{{ section['credits_string'] }}</p>
+
+							<!-- Description -->
+							<div class="text-base-content text-sm overflow-hidden text-ellipsis line-clamp-2 mb-2 prose hidden sm:block">
+								{{ section['description'] | safe }}
+							</div>
+
+							<!-- Metadata -->
+							<div class="flex flex-col md:flex-row gap-4 justify-between">
+								<div class="flex flex-col sm:flex-row gap-0 sm:gap-4">
+									<div class="text-sm text-base-content/60 mb-1">
+										<span class="font-medium">Submitted:</span> {{ section['submitted'] }}
+									</div>
+									<div class="text-sm text-base-content/60 mb-1">
+										<span class="font-medium">Requested Time:</span> {{ section['requested_time'] }}
+									</div>
+									<div class="text-sm text-base-content/60 mb-1">
+										<span class="font-medium">Show Type:</span> {{ section['subtype']['name'] }}
+									</div>
 								</div>
-								<div class="text-sm text-base-content/60 mb-1">
-									<span class="font-medium">Requested Time:</span> {{ section['requested_time'] }}
-								</div>
-								<div class="text-sm text-base-content/60 mb-1">
-									<span class="font-medium">Show Type:</span> {{ section['subtype']['name'] }}
+								<!-- Buttons -->
+								<div class="mt-auto pt-2 flex justify-end">
+									<div class="join flex-col sm:flex-row">
+										<a target="" href="/allocate/{{ section['season_id'] }}" class="btn btn-primary btn-md join-item">See More</a>
+										<button onclick="rejectSeason(event)" data-season="{{ section['season_id'] }}"
+											data-showname="{{ section['title'] }}" class="btn btn-secondary btn-md join-item">
+											Reject
+										</button>
+									</div>
 								</div>
 							</div>
-							<!-- Buttons -->
-							<div class="mt-auto pt-2 flex justify-end">
-								<div class="join flex-col sm:flex-row">
-									<a target="" href="/allocate/{{ section['season_id'] }}" class="btn btn-primary btn-md join-item">See More</a>
-									<button onclick="rejectSeason(event)" data-season="{{ section['season_id'] }}"
-										data-showname="{{ section['title'] }}" class="btn btn-secondary btn-md join-item">
-										Reject
-									</button>
-								</div>
-							</div>
-						</div>
 
+						</div>
 					</div>
+					{% endfor %}
 				</div>
-				{% endfor %}
+			
+				{% else %}
+				<p>No applications!</p>
+				{% endif %}
+			
 			</div>
-		
-			{% else %}
-			<p>No applications!</p>
-			{% endif %}
-		
-		</div>
-		<label class="tab">
-			<input type="radio" name="my_tabs_6" />
-			Upcoming Shows
-		</label>
-		<div class="tab-content bg-base-100 border-base-300 p-6">Coming soon ... maybe</div>
-		<label class="tab">
-			<input type="radio" name="my_tabs_6" />
-			About
-		</label>
-		<div class="tab-content bg-base-100 border-base-300 p-6">
-			<div class="flex flex-col gap-2 max-w-xl">
-				<p>Hello!</p>
-				<p>If you've found this you are the programme controller of URY, congrats! or... you're a loser nerd who has permissions to look here. If that's you... watch your step; someone might be very angry with you soon.</p>
-				<p>This is BaradDur, a tool to help you manage your show schedule. It is currently in development so not all features are going to work just yet (or ever perhaps). If you want changes here good luck - no one cares about software for the PC bcs the unfriendly scheduluer basically only impacts one person ever. That's why I wrote this for myself when I was PC because lets face it, no one else was going to.</p>
-				<p>Good luck on your adventure!</p>
-				<p>(maybe dr now??) Colin Roitt, Programme Controller, 2025-2025 (brief but intense)</p>
+			<label class="tab">
+				<input type="radio" name="my_tabs_6" />
+				Upcoming Shows
+			</label>
+			<div class="tab-content bg-base-100 border-base-300 p-6">Coming soon ... maybe</div>
+			<label class="tab">
+				<input type="radio" name="my_tabs_6" />
+				About
+			</label>
+			<div class="tab-content bg-base-100 border-base-300 p-6">
+				<div class="flex flex-col gap-2 max-w-xl">
+					<p>Hello!</p>
+					<p>If you've found this you are the programme controller of URY, congrats! or... you're a loser nerd who has permissions to look here. If that's you... watch your step; someone might be very angry with you soon.</p>
+					<p>This is BaradDur, a tool to help you manage your show schedule. It is currently in development so not all features are going to work just yet (or ever perhaps). If you want changes here good luck - no one cares about software for the PC bcs the unfriendly scheduluer basically only impacts one person ever. That's why I wrote this for myself when I was PC because lets face it, no one else was going to.</p>
+					<p>Good luck on your adventure!</p>
+					<p>(maybe dr now??) Colin Roitt, Programme Controller, 2025-2025 (brief but intense)</p>
+				</div>
 			</div>
 		</div>
-	</div>
 
-	<!-- rejection iframe modal -->
-	<div id="rejection-modal" class="modal">
-		<div class="modal-box !max-w-[60vw] flex align-center justify-center"">
-			<iframe style="width: 50vw; height: 50vh;" src="" frameborder="0"></iframe>
+		<!-- rejection iframe modal -->
+		<div id="rejection-modal" class="modal">
+			<div class="modal-box !max-w-[60vw] flex align-center justify-center"">
+				<iframe style="width: 50vw; height: 50vh;" src="" frameborder="0"></iframe>
+			</div>
+			<div class="modal-backdrop"></div>
 		</div>
-		<div class="modal-backdrop"></div>
 	</div>
 </body>
 <script>

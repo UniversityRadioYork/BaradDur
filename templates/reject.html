@@ -14,34 +14,36 @@
 	<link rel="manifest" href="{{ url_for('static', filename='favicon/site.webmanifest') }}">
 </head>
 
-<body class="p-4">
-    <h1 id="show-title"></h1>
-    <div class="form-control flex flex-col">
-        <label class="label">
-            <span class="label-text">Reason for rejection</span>
-        </label>
-        <textarea id="reason" class="textarea textarea-bordered h-24" placeholder="Type here..."></textarea>
-    </div>
-	<label class="label">
-		<span class="label-text">Reason autofill</span>
-	</label>
-	<div class="stock-responses flex flex-row gap-2 flex-wrap">
-		<div class="reason-autofill btn btn-outline btn-info btn-sm rounded-xl">Duplicate application</div>
-		<div class="reason-autofill-clear btn btn-outline btn-error btn-sm rounded-xl">Clear</div>
+<body>
+	<div class="p-4">
+		<h1 id="show-title"></h1>
+		<div class="form-control flex flex-col">
+			<label class="label">
+				<span class="label-text">Reason for rejection</span>
+			</label>
+			<textarea id="reason" class="textarea textarea-bordered h-24" placeholder="Type here..."></textarea>
+		</div>
+		<label class="label">
+			<span class="label-text">Reason autofill</span>
+		</label>
+		<div class="stock-responses flex flex-row gap-2 flex-wrap">
+			<div class="reason-autofill btn btn-outline btn-info btn-sm rounded-xl">Duplicate application</div>
+			<div class="reason-autofill-clear btn btn-outline btn-error btn-sm rounded-xl">Clear</div>
+		</div>
+		<div class="form-control mt-6">
+			<label class="cursor-pointer label">
+				<span class="label-text">Notify user</span> 
+				<input type="checkbox" id="notify_user" class="toggle toggle-primary" checked />
+			</label>	 	
+		<div class="form-control mt-6 flex justify-end">
+			<button id="confirm-reject" class="btn btn-primary">
+				<span class="text">Reject</span>
+				<span class="throbber hidden">
+				<span class="loading loading-dots loading-sm"></span>
+				</span>
+			</button>
+		</div>
 	</div>
-	<div class="form-control mt-6">
-		<label class="cursor-pointer label">
-			<span class="label-text">Notify user</span> 
-			<input type="checkbox" id="notify_user" class="toggle toggle-primary" checked />
-		</label>	 	
-    <div class="form-control mt-6 flex justify-end">
-        <button id="confirm-reject" class="btn btn-primary">
-			<span class="text">Reject</span>
-			<span class="throbber hidden">
-			  <span class="loading loading-dots loading-sm"></span>
-			</span>
-		</button>
-    </div>
 </body>
 <script>
     document.addEventListener("DOMContentLoaded", function() {

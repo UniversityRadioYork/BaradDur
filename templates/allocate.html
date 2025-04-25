@@ -14,305 +14,307 @@
 	<link rel="manifest" href="{{ url_for('static', filename='favicon/site.webmanifest') }}">
 
 </head>
-<body class="p-4 flex justify-center">
-  <div class="max-w-[1200px]">
-    <div class="flex flex-row items-center gap-2"">
-      <img class="h-10" src="{{ url_for('static', filename='favicon/android-chrome-192x192.png') }}">
-      <h1>BaradDur</h1>
-      <h6 class="opacity-25 hover:opacity-100 transition transition-opacity duration-700">Your personal all-seeing eye</h6>
-    </div>
-    <div class="breadcrumbs text-sm">
-      <ul>
-        <li><a href="/">Home</a></li>
-        {% if page_data %}
-          <li>Application for {{ page_data['show_data']['title'] }}</li>
-        {% else %}
-          <li>Allocate</li>
-        {% endif %}
-      </ul>
-    </div>
-    {% if page_data %}
-      <h2>{{ page_data['show_data']['title'] }}</h2>
+<body>
+  <div class="p-4 flex justify-center">
+    <div class="max-w-[1200px]">
+      <div class="flex flex-row items-center gap-2"">
+        <img class="h-10" src="{{ url_for('static', filename='favicon/android-chrome-192x192.png') }}">
+        <h1>BaradDur</h1>
+        <h6 class="opacity-25 hover:opacity-100 transition transition-opacity duration-700">Your personal all-seeing eye</h6>
+      </div>
+      <div class="breadcrumbs text-sm">
+        <ul>
+          <li><a href="/">Home</a></li>
+          {% if page_data %}
+            <li>Application for {{ page_data['show_data']['title'] }}</li>
+          {% else %}
+            <li>Allocate</li>
+          {% endif %}
+        </ul>
+      </div>
+      {% if page_data %}
+        <h2>{{ page_data['show_data']['title'] }}</h2>
 
-      <div class="heading flex items-center gap-3 sm:flex-row flex-col-reverse">
-        <div class="left flex-grow-10 w-full">
-          <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box">
-            <legend class="fieldset-legend">Description</legend>
-            <h2>{{ page_data['show_data']['description'] | safe}}</h2>
+        <div class="heading flex items-center gap-3 sm:flex-row flex-col-reverse">
+          <div class="left flex-grow-10 w-full">
+            <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box">
+              <legend class="fieldset-legend">Description</legend>
+              <h2>{{ page_data['show_data']['description'] | safe}}</h2>
+            </fieldset>
+
+            <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box">
+              <legend class="fieldset-legend">Credits</legend>
+              <div class="pb-3 flex flex-row gap-2 flex-wrap">
+                {% for credit in page_data['show_data']['credits'] %}
+                  <div class="tooltip">
+                    <div class="tooltip-content flex-col flex gap-2 items-center !bg-white !text-black border border-base-300">
+                        <div class="avatar">
+                          <div class="w-24 rounded">
+                            <img src="https://ury.org.uk{{ credit['User']['photo'] }}" />
+                          </div>
+                        </div>
+                        <div class="cont">
+                          <h4> {{ credit['type_name']}} </h4>
+                          <h4> {{ 'Has' if credit['User']['contract_signed'] else 'Hasn\'t' }} signed contract</h4>
+                        </div>
+                    </div>
+                    <a target="_blank" href="{{ credit['User']['url'] }}" class="badge badge-lg {{ 'badge-neutral' if credit['User']['contract_signed'] else 'badge-error' }} badge-soft">{{ credit['User']['fname'] }} {{ credit['User']['sname'] }}</a>
+                  </div>
+                {% endfor %}
+              </div>
+            </fieldset>
+
+            <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box">
+              <legend class="fieldset-legend">Show Type</legend>
+              <div class="pb-3">
+                <h2>{{ page_data['show_data']['subtype']['name'] }}</h2>
+              </div>
+            </fieldset>
+
+          </div>
+          <div class="left flex items-center flex-col gap-3">
+            <div class="avatar">
+              <div class="w-70 rounded">
+                {% if page_data['show_data']['photo'] %}
+                  <img src="{{ 'https://ury.org.uk/' + page_data['show_data']['photo'] }}" />
+                {{ else }}
+                  <img src="https://ury.org.uk/media/image_meta/ShowImageMetadata/offair.png" />
+                {% endif %}
+              </div>
+            </div>
+            <a 
+              class="btn btn-tertiary btn-sm"
+              href="https://ury.org.uk/myradio/Scheduler/editShow/?showid={{ page_data['show_data']['show_id'] }}"
+              target="_blank">
+              Edit Show on MyRadio
+            </a>
+          </div>
+        </div>
+        
+        <div class="flex gap-5 flex-col md:flex-row">
+          <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box w-full md:w-100 flex-grow-10">
+            <legend class="fieldset-legend">Weeks Selected</legend>
+            <div class="flex flex-col h-100">
+              <div class="checkbox-container flex-grow-10">
+                {% for week in page_data['applied_weeks'] %}
+                <label class="fieldset-label pb-2">
+                  <input type="checkbox" {{ "checked" if week[0] }} class="checkbox week-checkbox" id="wk{{ week[2] }}" />
+                  {{ week[2] }} - {{ week[1] }}
+                </label>
+                {% endfor %}
+              </div>
+              <a id="changed-week-msg" class="text-red-400 cursor-pointer hover:underline hidden text-center">You have changed the weeks to allocate, reset to requested?</a>
+            </div>
           </fieldset>
 
-          <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box">
-            <legend class="fieldset-legend">Credits</legend>
-            <div class="pb-3 flex flex-row gap-2 flex-wrap">
-              {% for credit in page_data['show_data']['credits'] %}
-                <div class="tooltip">
-                  <div class="tooltip-content flex-col flex gap-2 items-center !bg-white !text-black border border-base-300">
-                      <div class="avatar">
-                        <div class="w-24 rounded">
-                          <img src="https://ury.org.uk{{ credit['User']['photo'] }}" />
-                        </div>
-                      </div>
-                      <div class="cont">
-                        <h4> {{ credit['type_name']}} </h4>
-                        <h4> {{ 'Has' if credit['User']['contract_signed'] else 'Hasn\'t' }} signed contract</h4>
-                      </div>
+          <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box w-full flex-grow-1">
+            <legend class="fieldset-legend">Times Selected</legend>
+            <div class="flex flex-col gap-5">
+              {% for time in page_data['applied_times'] %}
+                <div class="flex gap-2 flex-col md:flex-row">
+                  <div class="div flex flex-row items-center gap-2">
+                    <a onclick="nonCustomTimeAllocation(event)" data-timeslotId="{{ time[id] }}" data-timeslotstring="{{ time['time'] }}" class="btn btn-primary join-item grow-1 allocation-button">
+                      <span class="text">Allocate</span>
+                      <span class="throbber hidden">
+                        <span class="loading loading-dots loading-sm"></span>
+                      </span>
+                    </a>
+                    <span class="text-base grow-10 whitespace-nowrap">{{ time['time'] }}</span>
                   </div>
-                  <a target="_blank" href="{{ credit['User']['url'] }}" class="badge badge-lg {{ 'badge-neutral' if credit['User']['contract_signed'] else 'badge-error' }} badge-soft">{{ credit['User']['fname'] }} {{ credit['User']['sname'] }}</a>
+                  <div role="alert" class="alert alert-error alert-soft grow-1" {{ "hidden" if not time['conflict']}} aria-hidden="{{ 'true' if time['conflict'] else false }}" >
+                    <span>{{ time['info'] }}</span>
+                  </div>
                 </div>
               {% endfor %}
             </div>
-          </fieldset>
 
-          <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box">
-            <legend class="fieldset-legend">Show Type</legend>
-            <div class="pb-3">
-              <h2>{{ page_data['show_data']['subtype']['name'] }}</h2>
-            </div>
-          </fieldset>
+            <div class="divider">Or set custom time</div>
+            
+            <form id="custom-time-form" onsubmit="customTimeAllocation(event)">
+              <input type="hidden" name="custom_time" value="true">
+              <fieldset class="fieldset">
+                <legend class="fieldset-legend">Day</legend>
+                <select class="select" id="custom_day" required>
+                  <option disabled selected>Pick a Day</option>
+                  <option value="0">Monday</option>
+                  <option value="1">Tuesday</option>
+                  <option value="2">Wednesday</option>
+                  <option value="3">Thursday</option>
+                  <option value="4">Friday</option>
+                  <option value="5">Saturday</option>
+                  <option value="6">Sunday</option>
+                </select>
+              </fieldset>
+              <fieldset class="fieldset flex gap-2 items-center">
+                <legend class="fieldset-legend">Start Time:</legend>
+                <input type="time" id="custom_start_time" name="start_time" class="input input-bordered" required>
+              </fieldset>
+              <fieldset class="fieldset flex gap-2 items-center">
+                <legend class="fieldset-legend">Duration (hours):</legend>
+                <input type="number" id="custom_duration" name="duration" class="input input-bordered" required>
+              </fieldset>
+              <button type="submit" class="btn btn-primary mt-2 allocation-button">
+                <span class="text">Allocate</span>
+                <span class="throbber hidden">
+                  <span class="loading loading-dots loading-sm"></span>
+                </span>
+              </button>
+            </form>
+          </fieldset>      
+        </div>
 
-        </div>
-        <div class="left flex items-center flex-col gap-3">
-          <div class="avatar">
-            <div class="w-70 rounded">
-              {% if page_data['show_data']['photo'] %}
-                <img src="{{ 'https://ury.org.uk/' + page_data['show_data']['photo'] }}" />
-              {{ else }}
-                <img src="https://ury.org.uk/media/image_meta/ShowImageMetadata/offair.png" />
-              {% endif %}
-            </div>
-          </div>
-          <a 
-            class="btn btn-tertiary btn-sm"
-            href="https://ury.org.uk/myradio/Scheduler/editShow/?showid={{ page_data['show_data']['show_id'] }}"
-            target="_blank">
-            Edit Show on MyRadio
-          </a>
-        </div>
-      </div>
-      
-      <div class="flex gap-5 flex-col md:flex-row">
-        <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box w-full md:w-100 flex-grow-10">
-          <legend class="fieldset-legend">Weeks Selected</legend>
-          <div class="flex flex-col h-100">
-            <div class="checkbox-container flex-grow-10">
-              {% for week in page_data['applied_weeks'] %}
-              <label class="fieldset-label pb-2">
-                <input type="checkbox" {{ "checked" if week[0] }} class="checkbox week-checkbox" id="wk{{ week[2] }}" />
-                {{ week[2] }} - {{ week[1] }}
-              </label>
-              {% endfor %}
-            </div>
-            <a id="changed-week-msg" class="text-red-400 cursor-pointer hover:underline hidden text-center">You have changed the weeks to allocate, reset to requested?</a>
-          </div>
+        <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box">
+          <legend class="fieldset-legend">Schedule</legend>
+          {% include 'calendar.html' %}
         </fieldset>
 
-        <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box w-full flex-grow-1">
-          <legend class="fieldset-legend">Times Selected</legend>
-          <div class="flex flex-col gap-5">
-            {% for time in page_data['applied_times'] %}
-              <div class="flex gap-2 flex-col md:flex-row">
-                <div class="div flex flex-row items-center gap-2">
-                  <a onclick="nonCustomTimeAllocation(event)" data-timeslotId="{{ time[id] }}" data-timeslotstring="{{ time['time'] }}" class="btn btn-primary join-item grow-1 allocation-button">
-                    <span class="text">Allocate</span>
-                    <span class="throbber hidden">
-                      <span class="loading loading-dots loading-sm"></span>
-                    </span>
-                  </a>
-                  <span class="text-base grow-10 whitespace-nowrap">{{ time['time'] }}</span>
-                </div>
-                <div role="alert" class="alert alert-error alert-soft grow-1" {{ "hidden" if not time['conflict']}} aria-hidden="{{ 'true' if time['conflict'] else false }}" >
-                  <span>{{ time['info'] }}</span>
-                </div>
-              </div>
-            {% endfor %}
-          </div>
+      {% else %}
+        <p>No valid season selected!</p>
+      {% endif %}
 
-          <div class="divider">Or set custom time</div>
-          
-          <form id="custom-time-form" onsubmit="customTimeAllocation(event)">
-            <input type="hidden" name="custom_time" value="true">
-            <fieldset class="fieldset">
-              <legend class="fieldset-legend">Day</legend>
-              <select class="select" id="custom_day" required>
-                <option disabled selected>Pick a Day</option>
-                <option value="0">Monday</option>
-                <option value="1">Tuesday</option>
-                <option value="2">Wednesday</option>
-                <option value="3">Thursday</option>
-                <option value="4">Friday</option>
-                <option value="5">Saturday</option>
-                <option value="6">Sunday</option>
-              </select>
-            </fieldset>
-            <fieldset class="fieldset flex gap-2 items-center">
-              <legend class="fieldset-legend">Start Time:</legend>
-              <input type="time" id="custom_start_time" name="start_time" class="input input-bordered" required>
-            </fieldset>
-            <fieldset class="fieldset flex gap-2 items-center">
-              <legend class="fieldset-legend">Duration (hours):</legend>
-              <input type="number" id="custom_duration" name="duration" class="input input-bordered" required>
-            </fieldset>
-            <button type="submit" class="btn btn-primary mt-2 allocation-button">
-              <span class="text">Allocate</span>
-              <span class="throbber hidden">
-                <span class="loading loading-dots loading-sm"></span>
-              </span>
-            </button>
-          </form>
-        </fieldset>      
+      <div class="collapse collapse-arrow bg-base-100 border border-base-300">
+        <input type="radio" name="my-accordion-2" />
+        <div class="collapse-title font-semibold">API Responses</div>
+        <div class="collapse-content text-sm">{{ page_data }}</div>
       </div>
-
-      <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box">
-        <legend class="fieldset-legend">Schedule</legend>
-        {% include 'calendar.html' %}
-      </fieldset>
-
-    {% else %}
-      <p>No valid season selected!</p>
-    {% endif %}
-
-    <div class="collapse collapse-arrow bg-base-100 border border-base-300">
-      <input type="radio" name="my-accordion-2" />
-      <div class="collapse-title font-semibold">API Responses</div>
-      <div class="collapse-content text-sm">{{ page_data }}</div>
     </div>
-  </div>
 
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const seasonId = window.location.pathname.split("/").pop();
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const seasonId = window.location.pathname.split("/").pop();
 
-      const changedWeekMsg = document.querySelector("#changed-week-msg");
-      const weekCheckboxes = [...document.querySelectorAll(".week-checkbox")];
-      const checkStatesInit = weekCheckboxes.map(checkbox => checkbox.checked);
+        const changedWeekMsg = document.querySelector("#changed-week-msg");
+        const weekCheckboxes = [...document.querySelectorAll(".week-checkbox")];
+        const checkStatesInit = weekCheckboxes.map(checkbox => checkbox.checked);
 
-      // if any of the week checkboxes are checked and are different from how they were at the start of page load, show the messgae
-      weekCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener("change", () => {
-          let currCheckStates = weekCheckboxes.map(checkbox => checkbox.checked);
-          if (currCheckStates.some((state, index) => state !== checkStatesInit[index])) {
-            changedWeekMsg.classList.remove("hidden");
-          } else {
-            changedWeekMsg.classList.add("hidden");
-          }
-        });
-      });
-
-      changedWeekMsg.addEventListener("click", () => {
-        for(let i = 0; i < weekCheckboxes.length; i++) {
-          weekCheckboxes[i].checked = checkStatesInit[i];
-        }
-        changedWeekMsg.classList.add("hidden");
-      });
-
-      document.querySelector("#custom-time-form").addEventListener("change", () => {
-        const form = document.querySelector("#custom-time-form");
-        const day = form.custom_day.value;
-        const start = form.start_time.value;
-        const duration = form.duration.value;
-        if (day && start && duration) {
-          // startTimestamp = new Date(`2021-01-01T${start}:00`).getTime() / 1000;
-          // endTimestamp = startTimestamp + duration * 60 * 60;
-          // console.log(startTimestamp, endTimestamp); 
-          // convert start to seconds after midnight
-          const startSeconds = convertStringTimeToSeconds(start);
-          const durationSeconds = parseInt(duration) * 60 * 60;
-          fetch(`/api/conflict?start=${startSeconds}&duration=${durationSeconds}&day=${day}`)
-          .then(response => response.json())
-          .then(data => {
-            console.log(data)
+        // if any of the week checkboxes are checked and are different from how they were at the start of page load, show the messgae
+        weekCheckboxes.forEach(checkbox => {
+          checkbox.addEventListener("change", () => {
+            let currCheckStates = weekCheckboxes.map(checkbox => checkbox.checked);
+            if (currCheckStates.some((state, index) => state !== checkStatesInit[index])) {
+              changedWeekMsg.classList.remove("hidden");
+            } else {
+              changedWeekMsg.classList.add("hidden");
+            }
           });
-        }
-      });
-    });
+        });
 
-    const convertStringTimeToSeconds = (timeString) => {
-      const timeParts = timeString.split(":");
-      const hours = parseInt(timeParts[0]);
-      const minutes = parseInt(timeParts[1]);
-      return (hours * 60 * 60) + (minutes * 60);
-    }
+        changedWeekMsg.addEventListener("click", () => {
+          for(let i = 0; i < weekCheckboxes.length; i++) {
+            weekCheckboxes[i].checked = checkStatesInit[i];
+          }
+          changedWeekMsg.classList.add("hidden");
+        });
 
-    const timeSlotStringToData = (timeslotString) => {
-      // parse from string like Sun 20:00 - 21:00
-      dayNum = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].indexOf(timeslotString.split(" ")[0]);
-      startTime = convertStringTimeToSeconds(timeslotString.split(" ")[1]);
-      duration = parseInt(timeslotString.split(" ")[3].split(":")[0]) - parseInt(timeslotString.split(" ")[1].split(":")[0]);
-      duration = duration * 60 * 60;
-      return { dayNum, startTime, duration }
-    }
-
-    const nonCustomTimeAllocation = async (e) => {
-      e.preventDefault();
-      const timeslotId = e.target.dataset.timeslotId;
-      const timeslotString = e.target.dataset.timeslotstring;
-      const data = {};
-      data["weeks"] = getWeeks();
-      data["time"] = -1;
-      const { dayNum, startTime, duration } = timeSlotStringToData(timeslotString);
-      data["timecustom_day"] = dayNum;
-      data["timecustom_stime"] = startTime;
-      data["timecustom_etime"] = duration;
-
-      console.log(data);
-      submitAllocation(data);
-    }
-
-    const customTimeAllocation = (e) => {
-      e.preventDefault();
-      const form = document.querySelector("#custom-time-form");
-      const data = {};
-      data["weeks"] = getWeeks();
-      data["time"] = -1;
-      data["timecustom_day"] = parseInt(form.custom_day.value);
-      data["timecustom_stime"] = convertStringTimeToSeconds(form.start_time.value);
-      data["timecustom_etime"] = parseInt(form.duration.value) * 60 * 60;
-
-      console.log(data);
-      submitAllocation(data);
-    }
-
-    const getWeeks = () => {
-      const weeks = {};
-      for (const week of document.querySelectorAll(".week-checkbox")) {
-        weeks[week.id] = week.checked ? 1 : 0;
-      }
-      return weeks;
-    }
-
-    const submitAllocation = async (data) => {
-      document.querySelectorAll(".allocation-button").forEach((button) => {
-        button.querySelector(".throbber").classList.remove("hidden");
-        button.querySelector(".text").classList.add("hidden");
-      });
-      const seasonId = window.location.pathname.split("/").pop();
-      const response = await fetch(`/api/allocate/${seasonId}`, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          'Content-type':'application/json', 
-          'Accept':'application/json',
-        }
-      });
-      document.querySelectorAll(".allocation-button").forEach((button) => {
-        button.querySelector(".throbber").classList.add("hidden");
-        button.querySelector(".text").classList.remove("hidden");
-      });
-      if (response.ok) {
-        response.json().then((data) => {
-          console.log(data);
-          const { status, payload } = data;
-          if (status === "OK") {
-            alert("Allocated successfully!");
-          } else {
-            alert("Failed to allocate: " + String(payload));
+        document.querySelector("#custom-time-form").addEventListener("change", () => {
+          const form = document.querySelector("#custom-time-form");
+          const day = form.custom_day.value;
+          const start = form.start_time.value;
+          const duration = form.duration.value;
+          if (day && start && duration) {
+            // startTimestamp = new Date(`2021-01-01T${start}:00`).getTime() / 1000;
+            // endTimestamp = startTimestamp + duration * 60 * 60;
+            // console.log(startTimestamp, endTimestamp); 
+            // convert start to seconds after midnight
+            const startSeconds = convertStringTimeToSeconds(start);
+            const durationSeconds = parseInt(duration) * 60 * 60;
+            fetch(`/api/conflict?start=${startSeconds}&duration=${durationSeconds}&day=${day}`)
+            .then(response => response.json())
+            .then(data => {
+              console.log(data)
+            });
           }
         });
-      } else {
-        alert("Failed to allocate for unknown reason!");
+      });
+
+      const convertStringTimeToSeconds = (timeString) => {
+        const timeParts = timeString.split(":");
+        const hours = parseInt(timeParts[0]);
+        const minutes = parseInt(timeParts[1]);
+        return (hours * 60 * 60) + (minutes * 60);
       }
-    }
-  </script>
+
+      const timeSlotStringToData = (timeslotString) => {
+        // parse from string like Sun 20:00 - 21:00
+        dayNum = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].indexOf(timeslotString.split(" ")[0]);
+        startTime = convertStringTimeToSeconds(timeslotString.split(" ")[1]);
+        duration = parseInt(timeslotString.split(" ")[3].split(":")[0]) - parseInt(timeslotString.split(" ")[1].split(":")[0]);
+        duration = duration * 60 * 60;
+        return { dayNum, startTime, duration }
+      }
+
+      const nonCustomTimeAllocation = async (e) => {
+        e.preventDefault();
+        const timeslotId = e.target.dataset.timeslotId;
+        const timeslotString = e.target.dataset.timeslotstring;
+        const data = {};
+        data["weeks"] = getWeeks();
+        data["time"] = -1;
+        const { dayNum, startTime, duration } = timeSlotStringToData(timeslotString);
+        data["timecustom_day"] = dayNum;
+        data["timecustom_stime"] = startTime;
+        data["timecustom_etime"] = duration;
+
+        console.log(data);
+        submitAllocation(data);
+      }
+
+      const customTimeAllocation = (e) => {
+        e.preventDefault();
+        const form = document.querySelector("#custom-time-form");
+        const data = {};
+        data["weeks"] = getWeeks();
+        data["time"] = -1;
+        data["timecustom_day"] = parseInt(form.custom_day.value);
+        data["timecustom_stime"] = convertStringTimeToSeconds(form.start_time.value);
+        data["timecustom_etime"] = parseInt(form.duration.value) * 60 * 60;
+
+        console.log(data);
+        submitAllocation(data);
+      }
+
+      const getWeeks = () => {
+        const weeks = {};
+        for (const week of document.querySelectorAll(".week-checkbox")) {
+          weeks[week.id] = week.checked ? 1 : 0;
+        }
+        return weeks;
+      }
+
+      const submitAllocation = async (data) => {
+        document.querySelectorAll(".allocation-button").forEach((button) => {
+          button.querySelector(".throbber").classList.remove("hidden");
+          button.querySelector(".text").classList.add("hidden");
+        });
+        const seasonId = window.location.pathname.split("/").pop();
+        const response = await fetch(`/api/allocate/${seasonId}`, {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: {
+            'Content-type':'application/json', 
+            'Accept':'application/json',
+          }
+        });
+        document.querySelectorAll(".allocation-button").forEach((button) => {
+          button.querySelector(".throbber").classList.add("hidden");
+          button.querySelector(".text").classList.remove("hidden");
+        });
+        if (response.ok) {
+          response.json().then((data) => {
+            console.log(data);
+            const { status, payload } = data;
+            if (status === "OK") {
+              alert("Allocated successfully!");
+            } else {
+              alert("Failed to allocate: " + String(payload));
+            }
+          });
+        } else {
+          alert("Failed to allocate for unknown reason!");
+        }
+      }
+    </script>
+  </div>
 </body>
 </html>
