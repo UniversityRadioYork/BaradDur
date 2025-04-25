@@ -246,10 +246,8 @@
 
       const nonCustomTimeAllocation = async (e) => {
         e.preventDefault();
-        console.log("🚀 ~ nonCustomTimeAllocation ~ e:", e)
         const timeslotId = e.target.dataset.timeslotId;
         const timeslotString = e.target.dataset.timeslotstring;
-        console.log("🚀 ~ nonCustomTimeAllocation ~ timeslotString:", timeslotString)
         const data = {};
         data["weeks"] = getWeeks();
         data["time"] = -1;
