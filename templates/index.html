@@ -52,7 +52,7 @@
 						List View
 					</label>
 				</div>
-				{% if pending_allocations %}
+				{% if pending_allocations and pending_allocations['payload']|length != 0 %}
 				<div id="grid-view" class="flex flex-wrap gap-4 justify-center">
 					{% for section in pending_allocations['payload'] %}
 					{% set border_color = "#002d5a" %}
@@ -178,7 +178,7 @@
 				</div>
 			
 				{% else %}
-				<p>No applications!</p>
+				<p class="text-center">No applications, nice job! <br/> (or something's broken but... probably not right?)</p>
 				{% endif %}
 			
 			</div>
