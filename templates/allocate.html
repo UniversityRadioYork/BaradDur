@@ -239,6 +239,7 @@
       dayNum = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].indexOf(timeslotString.split(" ")[0]);
       startTime = convertStringTimeToSeconds(timeslotString.split(" ")[1]);
       duration = parseInt(timeslotString.split(" ")[3].split(":")[0]) - parseInt(timeslotString.split(" ")[1].split(":")[0]);
+      duration = duration * 60 * 60;
       return { dayNum, startTime, duration }
     }
 
@@ -266,7 +267,7 @@
       data["time"] = -1;
       data["timecustom_day"] = parseInt(form.custom_day.value);
       data["timecustom_stime"] = convertStringTimeToSeconds(form.start_time.value);
-      data["timecustom_etime"] = parseInt(form.duration.value);
+      data["timecustom_etime"] = parseInt(form.duration.value) * 60 * 60;
 
       console.log(data);
       submitAllocation(data);
