@@ -124,7 +124,12 @@
             <div class="reason-autofill-clear btn btn-outline btn-error btn-sm rounded-xl">Clear</div>
           </div>
           <div class="form-control mt-3">
-            <button id="confirm-cancel" class="btn btn-secondary">Cancel Episode</button>
+            <button id="confirm-cancel" class="btn btn-secondary">
+              <span class="text">Cancel Epsiode</span>
+              <span class="throbber hidden">
+                <span class="loading loading-dots loading-sm"></span>
+              </span>
+            </button>
           </div>
         </fieldset>
       </div>
@@ -156,7 +161,12 @@
             <input type="number" id="new-duration" name="duration" class="input input-bordered" required>
           </div>
           <div class="form-control mt-3">
-            <button id="move-episode" class="btn btn-secondary">Move Episode</button>
+            <button id="move-episode" class="btn btn-secondary">
+              <span class="text">Move Episode</span>
+              <span class="throbber hidden">
+                <span class="loading loading-dots loading-sm"></span>
+              </span>
+            </button>
           </div>
       </div>
 
@@ -208,6 +218,9 @@
       // handle move button click - endpoint expects new start time as int and end time as an int we can calculate from duation
       moveButton.addEventListener('click', (e) => {
         e.preventDefault();
+        document.querySelector("#move-episode .throbber").classList.remove("hidden");
+        document.querySelector("#move-episode .text").classList.add("hidden");
+
         const startDate = moveStartDate.innerText;
         const startTime = moveStartTime.value;
         const duration = moveDuration.value;
@@ -228,6 +241,8 @@
         })
         .then(response => response.json())
         .then(data => {
+          document.querySelector("#move-episode .throbber").classList.add("hidden");
+          document.querySelector("#move-episode .text").classList.remove("hidden");
           const { status, payload } = data;
           if (status === "OK") {
             alert("Moved successfully");
@@ -235,7 +250,11 @@
             alert("Failed to move: " + String(payload));
           }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+          document.querySelector("#move-episode .throbber").classList.add("hidden");
+          document.querySelector("#move-episode .text").classList.remove("hidden");
+          console.error('Error:', error)}
+        );
       });
       
       // SETUP CANCEL PANEL
@@ -256,6 +275,8 @@
 
       document.querySelector('#confirm-cancel').addEventListener('click', (e) => {
         e.preventDefault();
+        document.querySelector("#confirm-cancel .throbber").classList.remove("hidden");
+        document.querySelector("#confirm-cancel .text").classList.add("hidden");
         const reason = document.querySelector("#reason").value;
         const timeslotId = timeSlotMetaData.dataset.timeslotid;
         if (!reason) {
@@ -271,6 +292,8 @@
         })
         .then(response => response.json())
         .then(data => {
+          document.querySelector("#confirm-cancel .throbber").classList.add("hidden");
+          document.querySelector("#confirm-cancel .text").classList.remove("hidden");
           const { status, payload } = data;
           if (status === "OK") {
             alert("Cancelled successfully");
@@ -278,7 +301,11 @@
             alert("Failed to cancel: " + String(payload));
           }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+          console.error('Error:', error)
+          document.querySelector("#confirm-cancel .throbber").classList.add("hidden");
+          document.querySelector("#confirm-cancel .text").classList.remove("hidden");
+        });
       });
 
       // expects date in format like 19/02/2025 22:00

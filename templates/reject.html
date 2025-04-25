@@ -35,7 +35,12 @@
 			<input type="checkbox" id="notify_user" class="toggle toggle-primary" checked />
 		</label>	 	
     <div class="form-control mt-6 flex justify-end">
-        <button id="confirm-reject" class="btn btn-primary">Reject</button>
+        <button id="confirm-reject" class="btn btn-primary">
+			<span class="text">Reject</span>
+			<span class="throbber hidden">
+			  <span class="loading loading-dots loading-sm"></span>
+			</span>
+		</button>
     </div>
 </body>
 <script>
@@ -45,6 +50,9 @@
         const showName = urlParams.get('showName');
         document.querySelector("#show-title").innerText = `Rejecting season of ${showName}`;
 		const rejectSeason = (e) => {
+			e.preventDefault();
+			document.querySelector("#confirm-reject .throbber").classList.remove("hidden");
+			document.querySelector("#confirm-reject .text").classList.add("hidden");
 			const reason = document.querySelector("#reason").value;
 			const seasonId = urlParams.get('seasonId');
 			const notifyUser = document.querySelector("#notify_user").checked;
@@ -60,6 +68,8 @@
 			})
 			.then(response => response.json())
 			.then(data => {
+				document.querySelector("#confirm-reject .throbber").classList.add("hidden");
+				document.querySelector("#confirm-reject .text").classList.remove("hidden");
 				const { status, payload } = data;
 				if (status === "OK") {
 					alert('Successfully rejected season: ' + String(payload));
@@ -67,7 +77,11 @@
 					alert("Failed to reject: " + String(payload));
 				}
 			})
-			.catch(error => console.error('Error:', error));
+			.catch(error => {
+				console.error('Error:', error)
+				document.querySelector("#confirm-reject .throbber").classList.add("hidden");
+				document.querySelector("#confirm-reject .text").classList.remove("hidden");
+			});
 		}
 
 		document.querySelector("#confirm-reject").addEventListener("click", rejectSeason);

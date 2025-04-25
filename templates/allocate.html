@@ -112,8 +112,12 @@
             {% for time in page_data['applied_times'] %}
               <div class="flex gap-2 flex-col md:flex-row">
                 <div class="div flex flex-row items-center gap-2">
-                  <a onclick="nonCustomTimeAllocation(event)" data-timeslotId="{{ time[id] }}" data-timeslotstring="{{ time['time'] }}" class="btn btn-primary join-item grow-1">Allocate</a>
-                  <!-- <a href="/allocate" class="btn btn-primary join-item grow-1" {{ "disabled" if time['conflict'] }} aria-disabled="{{ 'true' if time['conflict'] else false }}">Allocate</a> -->
+                  <a onclick="nonCustomTimeAllocation(event)" data-timeslotId="{{ time[id] }}" data-timeslotstring="{{ time['time'] }}" class="btn btn-primary join-item grow-1 allocation-button">
+                    <span class="text">Allocate</span>
+                    <span class="throbber hidden">
+                      <span class="loading loading-dots loading-sm"></span>
+                    </span>
+                  </a>
                   <span class="text-base grow-10 whitespace-nowrap">{{ time['time'] }}</span>
                 </div>
                 <div role="alert" class="alert alert-error alert-soft grow-1" {{ "hidden" if not time['conflict']}} aria-hidden="{{ 'true' if time['conflict'] else false }}" >
@@ -148,7 +152,12 @@
               <legend class="fieldset-legend">Duration (hours):</legend>
               <input type="number" id="custom_duration" name="duration" class="input input-bordered" required>
             </fieldset>
-            <button type="submit" class="btn btn-primary mt-2">Allocate</button>
+            <button type="submit" class="btn btn-primary mt-2 allocation-button">
+              <span class="text">Allocate</span>
+              <span class="throbber hidden">
+                <span class="loading loading-dots loading-sm"></span>
+              </span>
+            </button>
           </form>
         </fieldset>      
       </div>
@@ -272,6 +281,10 @@
     }
 
     const submitAllocation = async (data) => {
+      document.querySelectorAll(".allocation-button").forEach((button) => {
+        button.querySelector(".throbber").classList.remove("hidden");
+        button.querySelector(".text").classList.add("hidden");
+      });
       const seasonId = window.location.pathname.split("/").pop();
       const response = await fetch(`/api/allocate/${seasonId}`, {
         method: "POST",
@@ -280,6 +293,10 @@
           'Content-type':'application/json', 
           'Accept':'application/json',
         }
+      });
+      document.querySelectorAll(".allocation-button").forEach((button) => {
+        button.querySelector(".throbber").classList.add("hidden");
+        button.querySelector(".text").classList.remove("hidden");
       });
       if (response.ok) {
         response.json().then((data) => {
