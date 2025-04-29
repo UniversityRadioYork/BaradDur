@@ -156,4 +156,11 @@ def move_timeslot(timeslot_id, new_start, new_end, headers):
     response = requests.put(f"{BASE_URL}timeslot/{timeslot_id}/movetimeslot?" + KEY_STRING, data=data_to_send, headers=headers, verify=should_verify)
     print("MOVE HAS RESPONDED: ", f"{BASE_URL}timeslot/{timeslot_id}/movetimeslot?")
     print(response.text)
-    return response.json()
+    try:
+        response_json = response.json()
+    except json.JSONDecodeError:
+        return {
+            "status": "FAIL",
+            "payload": response.text
+        }
+    return response_json
