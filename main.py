@@ -57,7 +57,7 @@ def verifySession(session):
     if myradio_key == "dev":
         return True
     if ('name' in session and 'uid' in session):
-        api_url = myradio_url + "/user/"+str(session["uid"])+"/permissions?" + myradio_apikey
+        api_url = myradio_url + "user/"+str(session["uid"])+"/permissions?" + myradio_apikey
         response = requests.get(api_url)
         officer = json.loads(response.text)
         if 221 in officer["payload"] or 234 in officer["payload"]:

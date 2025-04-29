@@ -8,9 +8,9 @@ load_dotenv()
 dev_mode = os.environ.get('DEV_MODE', "True")
 should_verify = not dev_mode == "True"
 
-BASE_URL = os.environ.get('MYRADIO_URL', "https://www.ury.org.uk/api/v2")
+BASE_URL = os.environ.get('MYRADIO_URL', "https://www.ury.org.uk/api/v2/")
 # These are for pointing to a local server
-# BASE_URL = "https://localhost:4443/api/v2"
+# BASE_URL = "https://localhost:4443/api/v2/"
 
 API_KEY = os.environ.get('MYRADIO_API_KEY', "CHANGE_ME")
 # Uncomment the line below to use a local API key
@@ -33,7 +33,7 @@ def get_all_terms(current_only=False):
     params = "currentOnly=false"
     if current_only:
         params = "currentOnly=true"
-    response = requests.get(f"{BASE_URL}/term/allterms?" + params + KEY_STRING, verify=should_verify)
+    response = requests.get(f"{BASE_URL}term/allterms?" + params + KEY_STRING, verify=should_verify)
     # print(response.text)
     return response.json()
 
@@ -50,7 +50,7 @@ def get_show_application(season_id):
     return None
 
 def get_season_applied_weeks(season_id):
-    response = requests.get(f"{BASE_URL}/season/{season_id}/requestedweeks?" + KEY_STRING, verify=should_verify)
+    response = requests.get(f"{BASE_URL}season/{season_id}/requestedweeks?" + KEY_STRING, verify=should_verify)
     # print(response.text)
     weeks_applied_index = response.json()["payload"]
     term = get_all_terms(current_only=False)["payload"][-1]
@@ -66,29 +66,29 @@ def get_season_applied_weeks(season_id):
     return applied_weeks
 
 def get_season_applied_times(season_id):
-    response = requests.get(f"{BASE_URL}/season/{season_id}/requestedtimesavail?" + KEY_STRING, verify=should_verify)
+    response = requests.get(f"{BASE_URL}season/{season_id}/requestedtimesavail?" + KEY_STRING, verify=should_verify)
     # print(response.text)
     times = response.json()["payload"]
     return times
 
 def count_pending_allocations():
-    response = requests.get(f"{BASE_URL}/scheduler/countpendingallocations?" + KEY_STRING, verify=should_verify)
+    response = requests.get(f"{BASE_URL}scheduler/countpendingallocations?" + KEY_STRING, verify=should_verify)
     # print(response.text)
     return response.json()
 
 def pending_allocations():
-    req_url = f"{BASE_URL}/scheduler/pendingallocations?" + KEY_STRING
+    req_url = f"{BASE_URL}scheduler/pendingallocations?" + KEY_STRING
     response = requests.get(req_url, verify=should_verify)
     # print(response.text)
     return response.json()
 
 def get_schedule(year, week):
-    response = requests.get(f"{BASE_URL}/timeslot/weekschedule/{week}?year={year}" + KEY_STRING, verify=should_verify)
+    response = requests.get(f"{BASE_URL}timeslot/weekschedule/{week}?year={year}" + KEY_STRING, verify=should_verify)
     # print(response.text)
     return response.json()
 
 def get_timeslot_info(timeslot_id):
-    response = requests.get(f"{BASE_URL}/timeslot/{timeslot_id}?" + KEY_STRING, verify=should_verify)
+    response = requests.get(f"{BASE_URL}timeslot/{timeslot_id}?" + KEY_STRING, verify=should_verify)
     # print(response.text)
     return response.json()
 
@@ -105,7 +105,7 @@ def check_for_conflicts(day, start, duration, term_id = None):
         "start": int(start),
         "duration": int(duration)
     })
-    response = requests.get(f"{BASE_URL}/scheduler/scheduleconflicts?term_id={term_id}&time[day]={day}&time[start]={start}&time[duration]={duration}" + KEY_STRING, verify=should_verify)
+    response = requests.get(f"{BASE_URL}scheduler/scheduleconflicts?term_id={term_id}&time[day]={day}&time[start]={start}&time[duration]={duration}" + KEY_STRING, verify=should_verify)
     print(response.text)
     return response.json()
 
@@ -123,7 +123,8 @@ def schedule_season(season_id, data, headers):
             'timecustom_etime': data['timecustom_etime']
         }
     })
-    response = requests.put(f"{BASE_URL}/season/{season_id}/schedule?" + KEY_STRING, data=data_to_send, headers=headers, verify=should_verify)
+    print(data_to_send)
+    response = requests.put(f"{BASE_URL}season/{season_id}/schedule?" + KEY_STRING, data=data_to_send, headers=headers, verify=should_verify)
     print(response.text)
     return response.json()
 
@@ -133,7 +134,7 @@ def reject_season(season_id, reason, notify_user, headers):
         "notify_user": notify_user
     }
     data_to_send = json.dumps(data)
-    response = requests.put(f"{BASE_URL}/season/{season_id}/reject?" + KEY_STRING, data=data_to_send, headers=headers, verify=should_verify)
+    response = requests.put(f"{BASE_URL}season/{season_id}/reject?" + KEY_STRING, data=data_to_send, headers=headers, verify=should_verify)
     print(response.text)
     return response.json()
 
@@ -142,7 +143,7 @@ def cancel_timeslot(timeslot_id, reason, headers):
         "reason": reason
     }
     data_to_send = json.dumps(data) 
-    response = requests.put(f"{BASE_URL}/timeslot/{timeslot_id}/canceltimeslot?" + KEY_STRING, data=data_to_send, headers=headers, verify=should_verify)
+    response = requests.put(f"{BASE_URL}timeslot/{timeslot_id}/canceltimeslot?" + KEY_STRING, data=data_to_send, headers=headers, verify=should_verify)
     print(response.text)
     return response.json()
 
@@ -152,7 +153,7 @@ def move_timeslot(timeslot_id, new_start, new_end, headers):
         "newEnd": new_end
     }
     data_to_send = json.dumps(data)
-    response = requests.put(f"{BASE_URL}/timeslot/{timeslot_id}/movetimeslot?" + KEY_STRING, data=data_to_send, headers=headers, verify=should_verify)
-    print("MOVE HAS RESPONDED: ", f"{BASE_URL}/timeslot/{timeslot_id}/movetimeslot?")
+    response = requests.put(f"{BASE_URL}timeslot/{timeslot_id}/movetimeslot?" + KEY_STRING, data=data_to_send, headers=headers, verify=should_verify)
+    print("MOVE HAS RESPONDED: ", f"{BASE_URL}timeslot/{timeslot_id}/movetimeslot?")
     print(response.text)
     return response.json()
