@@ -161,6 +161,6 @@ def move_timeslot(timeslot_id, new_start, new_end, headers):
     except json.JSONDecodeError:
         return {
             "status": "FAIL",
-            "payload": response.text
+            "payload": response.text + " - " + f"{BASE_URL}timeslot/{timeslot_id}/movetimeslot?"
         }
     return response_json
