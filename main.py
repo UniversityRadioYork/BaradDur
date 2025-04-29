@@ -193,6 +193,6 @@ if __name__ == "__main__":
     if dev_mode == "True":
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         print("Running in dev mode", file=sys.stderr)
-        app.run(debug=True, port=port)
+        app.run(debug=True, host='0.0.0.0', port=port)
     else:
         serve(app, host='0.0.0.0',port=port)
