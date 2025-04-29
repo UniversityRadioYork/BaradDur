@@ -195,4 +195,4 @@ if __name__ == "__main__":
         print("Running in dev mode", file=sys.stderr)
         app.run(debug=True, host='0.0.0.0', port=port)
     else:
-        serve(app, host='0.0.0.0',port=port)
+        serve(app, host='0.0.0.0',port=port, threads=8)
