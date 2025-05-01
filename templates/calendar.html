@@ -6,6 +6,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css" />
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.css') }}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='favicon/apple-touch-icon.png') }}">
 	<link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}">
 	<link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}">
@@ -17,8 +18,7 @@
         }
     </style>
     <script>
-        const getWeek = () => {
-            var date = new Date();
+        const getWeek = (date) => {
             date.setHours(0, 0, 0, 0);
             // Thursday in current week decides the year.
             date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
@@ -93,15 +93,30 @@
             throbber.style.display = value ? "inline-block" : "none";
         }
 
+        const setWeekTitle = week => {
+            const weekTitle = document.querySelector("#week-title");
+            weekTitle.innerHTML = weekNames[week - firstWeekOfTerm] || '';
+        }
+
         let calendar;
         let week = 0;
         let weeksLoaded = [];
+        let weekNames = [];
         let isLoading = false;
+        let firstWeekOfTerm = 0;
         const throbber = document.createElement("span");
         throbber.classList.add("ml-3", "loading", "loading-dots", "loading-xl");
 
         document.addEventListener('DOMContentLoaded', function() {
-            week = getWeek();
+            // load week names
+            fetch('/api/weeknames')
+            .then(response => response.json())
+            .then(data => {
+                weekNames = data['week_names'];
+                firstWeekOfTerm = getWeek(new Date(data['start'] * 1000));
+                setWeekTitle(week);
+            });
+            week = getWeek(new Date());
             var calendarEl = document.getElementById('calendar');
             calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'timeGridWeek',
@@ -112,6 +127,7 @@
                 locale: 'en-gb',
                 scrollTime: "07:45:00",
                 height: "100vh",
+                weekNumbers: true,
                 windowResize: arg => {
                     if (window.innerWidth < 768) {
                         calendar.changeView('listWeek');
@@ -128,6 +144,7 @@
                     customRefresh: {
                         text: 'Refresh',
                         click: () => {
+                            setLoading(true);
                             calendar.getEvents().forEach(event => {
                                 event.remove();
                             });
@@ -141,6 +158,10 @@
                 headerToolbar: {
                     left: 'title',
                     right: 'customRefresh,today,prev,next',
+                },
+                datesSet: function({start}) {
+                    week = getWeek(start);
+                    setWeekTitle(week);
                 },
             });
             calendar.render();
@@ -160,7 +181,7 @@
                 loadWeek(week + 1);
             });
             document.querySelector(".fc-today-button").addEventListener("click", () => {
-                week = getWeek();
+                week = getWeek(new Date());
             });
 
             
@@ -190,6 +211,7 @@
     </script>
   </head>
   <body>
+    <h2 id="week-title" class="h-[33px]"></h2>
     <div id='calendar'></div>
 	<div id="timeslot-modal" class="modal">
 		<div class="modal-box !max-w-[1100px]">

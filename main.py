@@ -186,6 +186,13 @@ def api_move(timeslot_id):
         return res
     else:
         return auth_route()
+    
+@app.route('/api/weeknames', methods=['GET'])
+def api_get_week_names():
+    if verifySession(session):
+        return get_week_names()
+    else:
+        return auth_route()
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 6339))

@@ -49,6 +49,11 @@ def get_show_application(season_id):
             return allocation
     return None
 
+def get_week_names():
+    term = get_all_terms(current_only=False)["payload"][-1]
+    week_names = term
+    return week_names
+
 def get_season_applied_weeks(season_id):
     response = requests.get(f"{BASE_URL}season/{season_id}/requestedweeks?" + KEY_STRING, verify=should_verify)
     # print(response.text)
