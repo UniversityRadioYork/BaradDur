@@ -10,6 +10,12 @@
 	<link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}">
 	<link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}">
 	<link rel="manifest" href="{{ url_for('static', filename='favicon/site.webmanifest') }}">
+    <style>
+        .fc-event {
+            border: none;
+            border-bottom: 5px solid;
+        }
+    </style>
     <script>
         const getWeek = () => {
             var date = new Date();
@@ -22,6 +28,10 @@
             return 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000
                                     - 3 + (week1.getDay() + 6) % 7) / 7);
         }
+
+        const eventTypesNames = ["Regular", "Primetime", "Events", "News & Sport", "Alumni/Collaboration", "Specialist Music", "Speech"]
+        // const eventTypesColors = ["#3788d8", "#feb93a", "##d0011b", "#5a162e", "#d0011b", "#d0011b",'#2A722B']
+        const eventTypesColors = ["#002d5a", "#feb93a", "##d0011b", "#5a162e", "#d0011b", "#d0011b",'#2A722B']
 
         const addEvents = async data => {
             if (data['status'] == "FAIL"){
@@ -47,6 +57,7 @@
                     wasMixclouded = event['mixcloud_status'] == "Skipped - Off Air";
                     // url = `https://ury.org.uk/schedule/shows/timeslots/${event['timeslot_id']}`;
                     url = `/timeslot/${event['timeslot_id']}`;
+                    showTypeID = eventTypesNames.indexOf(event['subtype']["name"]);
                     let eventObj = calendar.addEvent({
                         title: event['title'],
                         start,
@@ -54,7 +65,7 @@
                         end,
                         url,
                         backgroundColor: isFuture ? '#9dbedf' : wasMixclouded ? 'red' : '#3788d8',
-                        borderColor: '#fff'
+                        borderColor: eventTypesColors[showTypeID]
                     });
                 }
             }
