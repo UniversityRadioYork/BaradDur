@@ -52,7 +52,7 @@ def verifyKey(key):
     pattern = re.compile('^[ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789]+$')
     return re.search(pattern, key)
 
-#lets you in if you are comp officer or have "edit banner" permission or if the app is in dev mode
+#lets you in if you are comp officer or have "Allocate Schedule Timeslots permission or if the app is in dev mode
 def verifySession(session):
     if myradio_key == "dev":
         return True
@@ -60,7 +60,8 @@ def verifySession(session):
         api_url = myradio_url + "user/"+str(session["uid"])+"/permissions?" + myradio_apikey
         response = requests.get(api_url)
         officer = json.loads(response.text)
-        if 221 in officer["payload"] or 234 in officer["payload"]:
+        # 215 for "Allocate Schedule Timeslots"
+        if 221 in officer["payload"] or 215 in officer["payload"]:
             return True
     return False
 
