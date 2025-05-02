@@ -126,7 +126,7 @@ def timeslot(timeslot_id):
 def api_allocate(season_id):
     if verifySession(session):
         data = request.get_json()
-        res = schedule_season(season_id, data, request.headers)
+        res = schedule_season(season_id, data)
         return res
     else:
         return auth_route()
@@ -137,7 +137,7 @@ def api_reject(season_id):
         req = request.get_json()
         reason = req['reason']
         notify_user = req['notify_user']
-        res = reject_season(season_id, reason, notify_user, request.headers)
+        res = reject_season(season_id, reason, notify_user)
         return res
     else:
         return auth_route()
@@ -171,7 +171,7 @@ def api_cancel(timeslot_id):
         # Check if reason is empty
         if reason == "":
             return "Reason cannot be empty", 400
-        res = cancel_timeslot(timeslot_id, reason, request.headers)
+        res = cancel_timeslot(timeslot_id, reason)
         return res
     else:
         return auth_route()
@@ -182,7 +182,7 @@ def api_move(timeslot_id):
         data = request.get_json()
         new_start = data['start_time']
         new_end = data['end_time']
-        res = move_timeslot(timeslot_id, new_start, new_end, request.headers)
+        res = move_timeslot(timeslot_id, new_start, new_end)
         return res
     else:
         return auth_route()
@@ -198,7 +198,7 @@ if __name__ == "__main__":
     port = int(os.environ.get('PORT', 6339))
     print("Starting server on port " + str(port), file=sys.stderr)
     if dev_mode == "True":
-        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        # urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         print("Running in dev mode", file=sys.stderr)
         app.run(debug=True, host='0.0.0.0', port=port)
     else:

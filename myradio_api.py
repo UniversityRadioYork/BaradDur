@@ -116,7 +116,11 @@ def check_for_conflicts(day, start, duration, term_id = None):
 
 # -------- put --------
 
-def schedule_season(season_id, data, headers):
+def schedule_season(season_id, data):
+    headers = {
+        "Host": "ury.org.uk",
+        "Content-Type": "application/json",
+    }
     num_weeks = len(data['weeks'])
     data_to_send = json.dumps({
         'num_weeks': num_weeks,
@@ -129,36 +133,50 @@ def schedule_season(season_id, data, headers):
         }
     })
     print(data_to_send)
-    response = requests.put(f"{BASE_URL}season/{season_id}/schedule?" + KEY_STRING, data=data_to_send, verify=should_verify)
+    response = requests.put(f"{BASE_URL}season/{season_id}/schedule?" + KEY_STRING, data=data_to_send, headers=headers, verify=should_verify)
     print(response.text)
     return response.json()
 
-def reject_season(season_id, reason, notify_user, headers):
+def reject_season(season_id, reason, notify_user):
+    headers = {
+        "Host": "ury.org.uk",
+        "Content-Type": "application/json",
+    }
     data = {
         "reason": reason,
         "notify_user": notify_user
     }
     data_to_send = json.dumps(data)
-    response = requests.put(f"{BASE_URL}season/{season_id}/reject?" + KEY_STRING, data=data_to_send, verify=should_verify)
+    response = requests.put(f"{BASE_URL}season/{season_id}/reject?" + KEY_STRING, data=data_to_send, headers=headers, verify=should_verify)
     print(response.text)
     return response.json()
 
-def cancel_timeslot(timeslot_id, reason, headers):
+def cancel_timeslot(timeslot_id, reason):
+    headers = {
+        "Host": "ury.org.uk",
+        "Content-Type": "application/json",
+    }
     data = {
         "reason": reason
     }
     data_to_send = json.dumps(data) 
-    response = requests.put(f"{BASE_URL}timeslot/{timeslot_id}/canceltimeslot?" + KEY_STRING, data=data_to_send, verify=should_verify)
+    response = requests.put(f"{BASE_URL}timeslot/{timeslot_id}/canceltimeslot?" + KEY_STRING, data=data_to_send, headers=headers, verify=should_verify)
     print(response.text)
     return response.json()
 
-def move_timeslot(timeslot_id, new_start, new_end, headers):
+def move_timeslot(timeslot_id, new_start, new_end):
+    # print(headers)
+    headers = {
+        "Host": "ury.org.uk",
+        "Content-Type": "application/json",
+    }
+    # print(headers)
     data = {
         "newStart": new_start,
         "newEnd": new_end
     }
     data_to_send = json.dumps(data)
-    response = requests.put(f"{BASE_URL}timeslot/{timeslot_id}/movetimeslot?" + KEY_STRING, data=data_to_send, verify=should_verify)
+    response = requests.put(f"{BASE_URL}timeslot/{timeslot_id}/movetimeslot?" + KEY_STRING, data=data_to_send, headers=headers, verify=should_verify)
     print("MOVE HAS RESPONDED: ", f"{BASE_URL}timeslot/{timeslot_id}/movetimeslot?")
     print(response.text)
     try:
