@@ -71,7 +71,8 @@ def index():
     if verifySession(session):
         get_all_terms()
         pending = pending_allocations()
-        return render_template('/index.html', title='Scheduler', pending_allocations=pending)
+        this_terms_shows = get_this_terms_shows()
+        return render_template('/index.html', title='Scheduler', pending_allocations=pending, this_terms_shows=this_terms_shows)
     else:
         return auth_route()
 
@@ -120,6 +121,14 @@ def timeslot(timeslot_id):
     if verifySession(session):
         timeslot = get_timeslot_info(timeslot_id)['payload']
         return render_template('/timeslot.html', title='Timeslot', timeslot=timeslot)
+    else:
+        return auth_route()
+    
+@app.route('/api/termshows', methods=['GET'])
+def get_terms_shows():
+    if verifySession(session):
+        shows = get_this_terms_shows()
+        return shows
     else:
         return auth_route()
     

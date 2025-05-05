@@ -184,9 +184,70 @@
 			</div>
 			<label class="tab">
 				<input type="radio" name="my_tabs_6" />
-				Upcoming Shows
+				Current Shows
 			</label>
-			<div class="tab-content bg-base-100 border-base-300 p-6">Coming soon ... maybe</div>
+			<div class="tab-content bg-base-100 border-base-300 p-6">
+				<div class="form-control w-full max-w-[1400px] mb-4">
+					<label class="label">
+						<span class="label-text">Search</span>
+					</label>
+					<input id="show-search" type="text" placeholder="Search shows..." class="input input-bordered w-full max-w-xs" />
+				</div>
+				<div class="flex flex-col gap-4 items-center">
+					{% for section in this_terms_shows['payload'] %}
+					{% set border_color = "#002d5a" %}
+					{% if section['subtype']['name'] == 'Alumni/Collaboration' %}
+						{% set border_color = "#d14fda" %}
+					{% elif section['subtype']['name'] == 'Primetime' %}
+						{% set border_color = "#feb93a" %}
+					{% elif section['subtype']['name'] == 'Events' %}
+						{% set border_color = "#d0011b" %}
+					{% elif section['subtype']['name'] == 'Speech' %}
+						{% set border_color = "#2A722B" %}
+					{% elif section['subtype']['name'] == 'News & Sport' %}
+						{% set border_color = "#5A162E" %}
+					{% elif section['subtype']['name'] == 'Specialist Music' %}
+						{% set border_color = "#562179" %}
+					{% endif %}
+
+					<div data-search="{{ section['title'] | lower }} {{ section['credits_string'] | lower }} {{ section['description'] | striptags | lower }}" id="{{ section['show_id'] }}" class="w-full bg-base-100 shadow-md rounded-2xl p-4 border border-base-300 flex flex-row gap-4 items-start border-l-[12px] max-w-[1400px]"
+						style="border-left-color: {{ border_color }};">
+
+						{% if section['photo'] %}
+						<img src="https://ury.org.uk{{ section['photo'] }}" alt="Show image" class="w-36 h-36 object-cover rounded-xl flex-shrink-0 hidden sm:block">
+						{% endif %}
+
+						<div class="flex-1 flex flex-col overflow-hidden">
+							<h2 class="text-lg font-semibold text-base-content mb-1">{{ section['title'] }}</h2>
+							<p class="text-sm text-base-content/70 mb-1">{{ section['credits_string'] }}</p>
+
+							<!-- Description -->
+							<div class="text-base-content text-sm overflow-hidden text-ellipsis line-clamp-2 mb-2 prose hidden sm:block">
+								{{ section['description'] | safe }}
+							</div>
+
+							<!-- Metadata -->
+							<div class="flex flex-wrap flex-row gap-4 justify-end">
+								<!-- Buttons -->	
+								<div class="mt-auto pt-2 flex justify-end">
+									<a target="_blank" href="{{ section['seasons']['url'] }}" class="btn btn-soft btn-primary btn-md">Seasons</a>
+								</div>
+								<div class="mt-auto pt-2 flex justify-end">
+									<a target="_blank" href="{{ section['editlink']['url'] }}" class="btn btn-soft btn-primary btn-md">Edit Show</a>
+								</div>
+								<div class="mt-auto pt-2 flex justify-end">
+									<a target="_blank" href="{{ section['uploadlink']['url'] }}" class="btn btn-soft btn-primary btn-md">Edit Show Art</a>
+								</div>
+								<div class="mt-auto pt-2 flex justify-end">
+									<a target="_blank" href="{{ section['micrositelink']['url'] }}" class="btn btn-soft btn-primary btn-md">Microsite</a>
+								</div>
+							</div>
+
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
 			<label class="tab">
 				<input type="radio" name="my_tabs_6" />
 				About
@@ -257,6 +318,17 @@
 			audio.pause();
 			audio.currentTime = 0;
 		});
+
+		document.getElementById('show-search').addEventListener('input', function () {
+		const query = this.value.toLowerCase();
+		const showCards = document.querySelectorAll('[data-search]');
+
+		showCards.forEach(card => {
+			const searchableText = card.getAttribute('data-search');
+			const matches = searchableText.includes(query);
+			card.style.display = matches ? 'flex' : 'none';
+		});
+	});
 	});
 </script>
 </html>

@@ -114,6 +114,10 @@ def check_for_conflicts(day, start, duration, term_id = None):
     print(response.text)
     return response.json()
 
+def get_this_terms_shows():
+    response = requests.get(f"{BASE_URL}show/allshows?show_type_id={1}&current_term_only={1}" + KEY_STRING, verify=should_verify)
+    return response.json()
+
 # -------- put --------
 
 def schedule_season(season_id, data):
