@@ -187,11 +187,14 @@
 				Current Shows
 			</label>
 			<div class="tab-content bg-base-100 border-base-300 p-6">
-				<div class="form-control w-full max-w-[1400px] mb-4">
+				<div class="form-control w-full max-w-[1400px] mb-4 flex flex-col sm:flex-row gap-2">
 					<label class="label">
-						<span class="label-text">Search</span>
+						<span class="label-text">Search:</span>
 					</label>
-					<input id="show-search" type="text" placeholder="Search shows..." class="input input-bordered w-full max-w-xs" />
+					<div class="flex max-w-xs items-center gap-2">
+						<input id="show-search" type="text" placeholder="Search shows..." class="input input-bordered w-full flex-grow-10" />
+						<div id="clear-search" class="badge badge-soft badge-error !pointer">X</div>
+					</div>
 				</div>
 				<div class="flex flex-col gap-4 items-center">
 					{% for section in this_terms_shows['payload'] %}
@@ -319,16 +322,26 @@
 			audio.currentTime = 0;
 		});
 
-		document.getElementById('show-search').addEventListener('input', function () {
-		const query = this.value.toLowerCase();
-		const showCards = document.querySelectorAll('[data-search]');
+		const clearButton = document.querySelector('#clear-search');
+		clearButton.addEventListener('click', () => {
+			document.querySelector('#show-search').value = "";
+			const showCards = document.querySelectorAll('[data-search]');
 
-		showCards.forEach(card => {
-			const searchableText = card.getAttribute('data-search');
-			const matches = searchableText.includes(query);
-			card.style.display = matches ? 'flex' : 'none';
+			showCards.forEach(card => {
+				card.style.display = 'flex';
+			});
+		})
+
+		document.querySelector('#show-search').addEventListener('input', function () {
+			const query = this.value.toLowerCase();
+			const showCards = document.querySelectorAll('[data-search]');
+
+			showCards.forEach(card => {
+				const searchableText = card.getAttribute('data-search');
+				const matches = searchableText.includes(query);
+				card.style.display = matches ? 'flex' : 'none';
+			});
 		});
-	});
 	});
 </script>
 </html>
