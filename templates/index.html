@@ -322,26 +322,43 @@
 			audio.currentTime = 0;
 		});
 
+		const showCards = document.querySelectorAll('[data-search]');
+
 		const clearButton = document.querySelector('#clear-search');
 		clearButton.addEventListener('click', () => {
 			document.querySelector('#show-search').value = "";
-			const showCards = document.querySelectorAll('[data-search]');
 
 			showCards.forEach(card => {
-				card.style.display = 'flex';
+				card.classList.remove('hidden');
+				card.classList.add('flex');
 			});
-		})
+		});
 
-		document.querySelector('#show-search').addEventListener('input', function () {
-			const query = this.value.toLowerCase();
-			const showCards = document.querySelectorAll('[data-search]');
+		let debounceTimeout;
+		const debounce = (func, delay) => {
+			return (...args) => {
+				clearTimeout(debounceTimeout);
+				debounceTimeout = setTimeout(() => func(...args), delay);
+			};
+		};
+
+		const handleSearch = () => {
+			const query = document.querySelector('#show-search').value.toLowerCase();
 
 			showCards.forEach(card => {
 				const searchableText = card.getAttribute('data-search');
 				const matches = searchableText.includes(query);
-				card.style.display = matches ? 'flex' : 'none';
+				if (matches) {
+					card.classList.remove('hidden');
+					card.classList.add('flex');
+				} else {
+					card.classList.add('hidden');
+					card.classList.remove('flex');
+				}
 			});
-		});
+		};
+
+		document.querySelector('#show-search').addEventListener('input', debounce(handleSearch, 300));
 	});
 </script>
 </html>
