@@ -108,6 +108,13 @@
         throbber.classList.add("ml-3", "loading", "loading-dots", "loading-xl");
 
         document.addEventListener('DOMContentLoaded', function() {
+            const handleCalWidth = arg => {
+                if (window.innerWidth < 768) {
+                        calendar.changeView('listWeek');
+                        return;
+                    }
+                    calendar.changeView('timeGridWeek');
+            }
             // load week names
             fetch('/api/weeknames')
             .then(response => response.json())
@@ -127,13 +134,7 @@
                 locale: 'en-gb',
                 scrollTime: "07:45:00",
                 height: "100vh",
-                windowResize: arg => {
-                    if (window.innerWidth < 768) {
-                        calendar.changeView('listWeek');
-                        return;
-                    }
-                    calendar.changeView('timeGridWeek');
-                },
+                windowResize: handleCalWidth,
                 eventClick: function(info) {
                     info.jsEvent.preventDefault(); // don't let the browser navigate
                     // window.open(info.event.url, '_blank');
@@ -164,6 +165,7 @@
                 },
             });
             calendar.render();
+            handleCalWidth();
             // Page navigation - this does some pre-loading too
             document.querySelector(".fc-toolbar-title").appendChild(throbber);
             loadWeek(week);
