@@ -288,7 +288,13 @@
 		modal.classList.add('modal-open');
 	}
 
-	document.addEventListener("DOMContentLoaded", function() {
+	document.addEventListener("DOMContentLoaded", async function() {
+		const cookies = await document.cookie.split('; ').reduce((acc, cookie) => {
+			const [name, value] = cookie.split('=');
+			acc[name] = decodeURIComponent(value);
+			return acc;
+		}, {});
+
 		const modal = document.getElementById('rejection-modal');
 		const closeModal = () => {
 			modal.classList.remove('modal-open');
@@ -297,9 +303,15 @@
 		modal.querySelector('.modal-backdrop').addEventListener('click', closeModal);
 
 		const viewToggle = document.querySelector('#view-toggle');
+		if (cookies['view'] === 'list') {
+			viewToggle.checked = true;
+		} else {
+			viewToggle.checked = false;
+		}
 		const gridView = document.querySelector('#grid-view');
 		const listView = document.querySelector('#list-view');
 		const setView = () => {
+			document.cookie = `view=${viewToggle.checked ? 'list' : 'grid'}; path=/; max-age=31536000;`;
 			if (viewToggle.checked) {
 				gridView.classList.add('hidden');
 				listView.classList.remove('hidden');
