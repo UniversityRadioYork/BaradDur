@@ -193,7 +193,7 @@
 					</label>
 					<div class="flex max-w-xs items-center gap-2">
 						<input id="show-search" type="text" placeholder="Search shows..." class="input input-bordered w-full flex-grow-10" />
-						<div id="clear-search" class="badge badge-soft badge-error !pointer">X</div>
+						<div id="clear-search" class="btn badge badge-soft badge-error !hidden">X</div>
 					</div>
 				</div>
 				<div class="flex flex-col gap-4 items-center">
@@ -354,6 +354,7 @@
 		const clearButton = document.querySelector('#clear-search');
 		clearButton.addEventListener('click', () => {
 			document.querySelector('#show-search').value = "";
+			clearButton.classList.add('!hidden');
 
 			showCards.forEach(card => {
 				card.classList.remove('hidden');
@@ -371,6 +372,11 @@
 
 		const handleSearch = () => {
 			const query = document.querySelector('#show-search').value.toLowerCase();
+			if (query.length > 0) {
+				clearButton.classList.remove('!hidden');
+			} else {
+				clearButton.classList.add('!hidden');
+			}
 
 			showCards.forEach(card => {
 				const searchableText = card.getAttribute('data-search');
