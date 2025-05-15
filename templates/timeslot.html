@@ -7,7 +7,7 @@
 	<link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
 	<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 	<link href="https://cdn.jsdelivr.net/npm/daisyui@5.0.2/themes.css" rel="stylesheet" type="text/css" />
-  <script type="module" src="https://unpkg.com/cally"></script>
+  <!-- <script type="module" src="https://unpkg.com/cally"></script> -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.css') }}">
   <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='favicon/apple-touch-icon.png') }}">
 	<link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}">
@@ -18,8 +18,31 @@
 <body>
   <div class="p-4 w-full">
     {% if timeslot %}
+      {% if timeslot['mixcloud_status'] == "Skipped - Off Air" %}
+        {% set circle_fill = "red" %}
+        {% set circle_fill_method = "currentColor" %}
+        {% set tooltip_text = "Show may not have aired" %}
+      {% elif "/URY1350/" in timeslot['mixcloud_status'] %}
+        {% set circle_fill = "blue" %}
+        {% set circle_fill_method = "currentColor" %}
+        {% set tooltip_text = "Show available on Mixcloud" %}
+      {% else %}
+        {% set circle_fill = "blue" %}
+        {% set circle_fill_method = "none" %}
+        {% set tooltip_text = "Show has not yet aired" %}
+      {% endif %}
       <div class="flex flex-row justify-between pl-2">
-        <h2>{{ timeslot['title'] }}</h2>
+        <h2 class="flex items-center gap-2">
+          <div class="tooltip tooltip-right group">
+            <div class="tooltip-content flex-col flex gap-2 items-center !bg-white !text-black border border-base-300 hidden group-hover:flex">
+                <p>{{ tooltip_text }}</p>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-{{circle_fill}}-500" fill="{{circle_fill_method}}" viewBox="0 0 24 24" stroke="currentColor">
+              <circle cx="12" cy="12" r="10" stroke-width="2" />
+            </svg>
+          </div>
+          {{ timeslot['title'] }}
+        </h2>
         <h3>
           <a 
             class="btn btn-tertiary btn-sm"
