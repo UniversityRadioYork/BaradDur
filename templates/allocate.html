@@ -67,7 +67,11 @@
             <fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box">
               <legend class="fieldset-legend">Show Type</legend>
               <div class="pb-3">
-                <h2>{{ page_data['show_data']['subtype']['name'] }}</h2>
+                {% if page_data['show_data']['subtype'] and page_data['show_data']['subtype']['name'] %}
+                  <h2>{{ page_data['show_data']['subtype']['name'] }}</h2>
+                {% else %}
+                  <h2>Subtype not available</h2>
+                {% endif %}
               </div>
             </fieldset>
 
