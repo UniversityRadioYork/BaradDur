@@ -191,3 +191,26 @@ def move_timeslot(timeslot_id, new_start, new_end):
             "payload": response.text + " - " + f"{BASE_URL}timeslot/{timeslot_id}/movetimeslot?"
         }
     return response_json
+
+# This ep is currently not used - front end should be added to handle this request. Currently links to myradio's seasons list reduce the value of this implementation.
+def add_new_episode(season_id, new_start, new_end):
+    headers = {
+        "Host": "ury.org.uk",
+        "Content-Type": "application/json",
+    }
+    data = {
+        "newStart": new_start,
+        "newEnd": new_end
+    }
+    data_to_send = json.dumps(data)
+    response = requests.put(f"{BASE_URL}season/{season_id}/addEpisode?" + KEY_STRING, data=data_to_send, headers=headers, verify=should_verify)
+    print("ADD EPISODE HAS RESPONDED: ", f"{BASE_URL}season/{season_id}/addEpisode?")
+    print(response.text)
+    try:
+        response_json = response.json()
+    except json.JSONDecodeError:
+        return {
+            "status": "FAIL",
+            "payload": response.text + " - " + f"{BASE_URL}season/{season_id}/addEpisode?"
+        }
+    return response_json
