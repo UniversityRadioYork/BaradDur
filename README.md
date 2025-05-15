@@ -26,11 +26,16 @@ Note this project uses Tailwind and DaisyUI for styling. If you must add global 
 ## Todo:
 Not in priority order
 
-- Reject application
 - View clashes on custom time slot form update
-- List of shows this term
 - Include a way to update PIS News
-- Make sure login permissions are checked correctly for deployment
+- See a shows sign in percentages on list shows page
+
+## Images
+![image](https://github.com/user-attachments/assets/0968b776-c95b-4989-89c9-79fae7ded3c9)
+![image](https://github.com/user-attachments/assets/0d0b0446-85d6-439f-805e-3a5b9f54b0db)
+![image](https://github.com/user-attachments/assets/5961d129-8f91-439e-93b4-1f1f2c0dd957)
+![image](https://github.com/user-attachments/assets/f2f3e66f-acb1-4656-bf46-bbaeb9ff2584)
+![image](https://github.com/user-attachments/assets/68ad8d89-af06-44dc-98f7-1e386331d287)
 
 
 ## Credits
