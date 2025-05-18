@@ -118,6 +118,10 @@ def get_this_terms_shows():
     response = requests.get(f"{BASE_URL}show/allshows?show_type_id={1}&current_term_only={1}" + KEY_STRING, verify=should_verify)
     return response.json()
 
+def get_latest_pis():
+    response = requests.get(f"{BASE_URL}news/latestnewsitem/4?" + KEY_STRING, verify=should_verify)
+    return response.json()
+
 # -------- put --------
 
 def schedule_season(season_id, data):
@@ -212,5 +216,28 @@ def add_new_episode(season_id, new_start, new_end):
         return {
             "status": "FAIL",
             "payload": response.text + " - " + f"{BASE_URL}season/{season_id}/addEpisode?"
+        }
+    return response_json
+
+def add_pis_item(content):
+    headers = {
+        "Host": "ury.org.uk",
+        "Content-Type": "application/json",
+    }
+    data = {
+        # 4 is the news feed id for PIS
+        "feedid": 4,
+        "content": content
+    }
+    data_to_send = json.dumps(data)
+    response = requests.post(f"{BASE_URL}news/additem?" + KEY_STRING, data=data_to_send, headers=headers, verify=should_verify)
+    print("ADD PIS ITEM HAS RESPONDED: ", f"{BASE_URL}news/additem?")
+    print(response.text)
+    try:
+        response_json = response.json()
+    except json.JSONDecodeError:
+        return {
+            "status": "FAIL",
+            "payload": response.text + " - " + f"{BASE_URL}news/additem?"
         }
     return response_json

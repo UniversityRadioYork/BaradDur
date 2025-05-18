@@ -72,7 +72,8 @@ def index():
         get_all_terms()
         pending = pending_allocations()
         this_terms_shows = get_this_terms_shows()
-        return render_template('/index.html', title='Scheduler', pending_allocations=pending, this_terms_shows=this_terms_shows)
+        latest_pis = get_latest_pis()
+        return render_template('/index.html', title='Scheduler', pending_allocations=pending, this_terms_shows=this_terms_shows, latest_pis=latest_pis)
     else:
         return auth_route()
 
@@ -201,6 +202,15 @@ def api_move(timeslot_id):
 def api_get_week_names():
     if verifySession(session):
         return get_week_names()
+    else:
+        return auth_route()
+    
+@app.route('/api/save_pis', methods=['POST'])
+def api_save_pis():
+    if verifySession(session):
+        data = request.get_json()
+        res = add_pis_item(data['content'])
+        return res
     else:
         return auth_route()
 
