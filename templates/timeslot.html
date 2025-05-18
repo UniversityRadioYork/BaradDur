@@ -218,6 +218,14 @@
 
 
     <script>
+      // expects date in format like 19/02/2025 22:00
+      const dateStrToObj = (dateStr) => {
+          const [date, time] = dateStr.split(' ');
+          const [day, month, year] = date.split('/').map(Number);
+          const [hours, minutes] = time.split(':').map(Number);
+          return new Date(year, month - 1, day, hours, minutes);
+        }
+
       document.addEventListener("DOMContentLoaded", () => {
         const timeSlotMetaData = document.querySelector("#timeslot_data");
 
@@ -226,12 +234,15 @@
         const moveStartTime = document.querySelector("#custom-start-time");
         const moveDuration = document.querySelector("#new-duration");
         const moveButton = document.querySelector("#move-episode");
+        const datePicker = document.querySelector("#new-date-picker");
 
         const currentStartDate = timeSlotMetaData.dataset.starttime.split(' ')[0];
         moveStartDate.innerText = currentStartDate;
         const currentStartTime = timeSlotMetaData.dataset.starttime.split(' ')[1];
         moveStartTime.value = currentStartTime;
         moveDuration.value = parseInt(timeSlotMetaData.dataset.duration.split(':')[0]);
+        // set the date picker to the current start date
+        datePicker.value = currentStartDate;
         
         document.querySelector('#new-date-picker').addEventListener('change', (e) => {
           const selectedDate = e.target.value;
@@ -331,14 +342,6 @@
             document.querySelector("#confirm-cancel .text").classList.remove("hidden");
           });
         });
-
-        // expects date in format like 19/02/2025 22:00
-        const dateStrToObj = (dateStr) => {
-          const [date, time] = dateStr.split(' ');
-          const [day, month, year] = date.split('/').map(Number);
-          const [hours, minutes] = time.split(':').map(Number);
-          return new Date(year, month - 1, day, hours, minutes);
-        }
       });
     </script>
   </div>
