@@ -185,7 +185,17 @@
 
 
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
+      document.addEventListener("DOMContentLoaded", async () => {
+        const cookies = await document.cookie.split('; ').reduce((acc, cookie) => {
+          const [name, value] = cookie.split('=');
+          acc[name] = decodeURIComponent(value);
+          return acc;
+        }, {});
+        
+        if (cookies['theme']) {
+          document.documentElement.setAttribute('data-theme', cookies['theme']);
+        }
+
         const seasonId = window.location.pathname.split("/").pop();
 
         const changedWeekMsg = document.querySelector("#changed-week-msg");

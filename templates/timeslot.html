@@ -226,7 +226,17 @@
           return new Date(year, month - 1, day, hours, minutes);
         }
 
-      document.addEventListener("DOMContentLoaded", () => {
+      document.addEventListener("DOMContentLoaded", async () => {
+        const cookies = await document.cookie.split('; ').reduce((acc, cookie) => {
+          const [name, value] = cookie.split('=');
+          acc[name] = decodeURIComponent(value);
+          return acc;
+        }, {});
+        
+        if (cookies['theme']) {
+          document.documentElement.setAttribute('data-theme', cookies['theme']);
+        }
+
         const timeSlotMetaData = document.querySelector("#timeslot_data");
 
         // SETUP MOVE PANEL

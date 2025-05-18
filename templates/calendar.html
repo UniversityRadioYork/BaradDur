@@ -107,7 +107,17 @@
         const throbber = document.createElement("span");
         throbber.classList.add("ml-3", "loading", "loading-dots", "loading-xl");
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async () => {
+            const cookies = await document.cookie.split('; ').reduce((acc, cookie) => {
+                const [name, value] = cookie.split('=');
+                acc[name] = decodeURIComponent(value);
+                return acc;
+            }, {});
+            
+            if (cookies['theme']) {
+                document.documentElement.setAttribute('data-theme', cookies['theme']);
+            }
+
             const handleCalWidth = arg => {
                 if (window.innerWidth < 768) {
                         calendar.changeView('listWeek');

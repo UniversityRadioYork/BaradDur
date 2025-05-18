@@ -46,7 +46,17 @@
 	</div>
 </body>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", async () => {
+		const cookies = await document.cookie.split('; ').reduce((acc, cookie) => {
+          const [name, value] = cookie.split('=');
+          acc[name] = decodeURIComponent(value);
+          return acc;
+        }, {});
+		
+        if (cookies['theme']) {
+          document.documentElement.setAttribute('data-theme', cookies['theme']);
+        }
+
         // get seasonName from url
         const urlParams = new URLSearchParams(window.location.search);
         const showName = urlParams.get('showName');

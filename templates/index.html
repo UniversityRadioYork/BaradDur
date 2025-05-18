@@ -17,16 +17,22 @@
 
 <body>
 	<div class="p-4">
-		<div class="flex flex-row items-center gap-2"">
+		<div class="flex flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-2 pb-4">
 			<img class="h-10" src="{{ url_for('static', filename='favicon/android-chrome-192x192.png') }}">
 			<h1>BaradDur</h1>
 			<h6 id="duhduhduhhh" class="opacity-25 hover:opacity-100 transition transition-opacity duration-700">Your personal all-seeing eye</h6>
 			<audio id="hoverAudio" src="{{ url_for('static', filename='duhduhduhhh.mp3') }}"></audio>
 		</div>
-		<div class="breadcrumbs text-sm">
-			<ul>
-			<li>Home</li>
-			</ul>
+		<div class="form-control w-full flex flex-row-reverse justify-between">
+			<div class="flex flex-col">
+				{% include 'theme-picker.html' %}
+				<div  class="text-sm">Theme: <span class="curr-theme"></span></div>
+			</div>
+			<div class="breadcrumbs text-sm">
+				<ul>
+					<li>Home</li>
+				</ul>
+			</div>
 		</div>
 		<!-- name of each tab group should be unique -->
 		<div class="tabs tabs-box">
@@ -303,6 +309,21 @@
 			acc[name] = decodeURIComponent(value);
 			return acc;
 		}, {});
+
+		const themeToggle = document.querySelector('#theme-toggle');
+        if (cookies['theme']) {
+        	document.documentElement.setAttribute('data-theme', cookies['theme']);
+			document.querySelector('.curr-theme').innerText = cookies['theme'];
+        }
+		document.querySelectorAll('[data-set-theme]').forEach((el) => {
+			el.addEventListener('click', (e) => {
+				e.preventDefault();
+				const theme = e.currentTarget.getAttribute('data-set-theme');
+				document.documentElement.setAttribute('data-theme', theme);
+				document.querySelector('.curr-theme').innerText = theme;
+				document.cookie = 'theme=' + theme +'; path=/; max-age=31536000; SameSite=Lax;'
+			});
+		});
 
 		const currentTab = cookies['current_tab'] || 'schedule';
 		const tabs = document.querySelectorAll('.tabs input[type="radio"]');

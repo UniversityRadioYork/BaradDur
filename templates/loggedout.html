@@ -9,5 +9,18 @@
   <h1>Logged out</h1>
   <p>You are logged out.</p>
   <p><a href="/">Log in to continue</a></p>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const cookies = await document.cookie.split('; ').reduce((acc, cookie) => {
+        const [name, value] = cookie.split('=');
+        acc[name] = decodeURIComponent(value);
+        return acc;
+      }, {});
+
+      if (cookies['theme']) {
+        document.documentElement.setAttribute('data-theme', cookies['theme']);
+      }
+    });
+  </script>
 </body>
 </html>
