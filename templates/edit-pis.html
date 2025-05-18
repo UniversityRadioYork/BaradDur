@@ -44,11 +44,11 @@
         paste_auto_cleanup_on_paste : true,
         paste_remove_styles: true,
         paste_remove_styles_if_webkit: true,
-        paste_strip_class_attributes: true
+        paste_strip_class_attributes: true,
       });
 
       const saveButton = document.querySelector('#save-pis-button');
-      const undoButton = document.querySelector('.btn-secondary');
+      // const undoButton = document.querySelector('.btn-secondary');
 
       saveButton.addEventListener('click', function() {
         saveButton.querySelector('.loading').classList.remove('!hidden');
@@ -74,9 +74,9 @@
         });
       });
 
-      undoButton.addEventListener('click', function() {
-        tinymce.get('mytextarea').setContent(document.querySelector('#mytextarea').dataset.latest);
-      });
+      // undoButton.addEventListener('click', function() {
+      //   tinymce.get('mytextarea').setContent(document.querySelector('#mytextarea').dataset.latest);
+      // });
     });
   </script>
 </body>
