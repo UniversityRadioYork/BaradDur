@@ -7,12 +7,12 @@
 	<link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
 	<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 	<link href="https://cdn.jsdelivr.net/npm/daisyui@5.0.2/themes.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/hugerte@1/hugerte.min.js"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.css') }}">
   <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='favicon/apple-touch-icon.png') }}">
 	<link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}">
 	<link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}">
 	<link rel="manifest" href="{{ url_for('static', filename='favicon/site.webmanifest') }}">
-  <script src="https://cdn.tiny.cloud/1/id8x4mia1r35mu6mra8h2oicixho6c1qrngflpc3lqwzwh59/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 </head>
 <body>
   <h2 class="pb-1">Edit Presenter Information System</h2>
@@ -28,14 +28,14 @@
   </div>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      tinymce.init({
+      hugerte.init({
         // almost all solen from the MyRadio setup of this module.
         selector: '#mytextarea',
         height: 500,
-        plugins: "anchor autolink charmap code emoticons image link lists media preview searchreplace table visualblocks wordcount",
+        plugins: "anchor autolink charmap code emoticons image link lists media preview table visualblocks wordcount",
         media_alt_source: false,
         menubar: false,
-        toolbar: "undo redo | blocks styleselect | bold italic underline | removeformat | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media charmap | visualblocks code preview",
+        toolbar: "undo redo | blocks styleselect | bold italic underline | removeformat | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent table | link image media charmap emoticons | visualblocks code preview",
         element_format : "html",
         invalid_elements: "script",
         invalid_styles: "color, font-size, background",
