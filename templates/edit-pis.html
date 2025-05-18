@@ -15,8 +15,8 @@
   <script src="https://cdn.tiny.cloud/1/id8x4mia1r35mu6mra8h2oicixho6c1qrngflpc3lqwzwh59/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 </head>
 <body>
-  <h2>Edit Presenter Information System</h2>
-  <br/>
+  <h2 class="pb-1">Edit Presenter Information System</h2>
+  <h4 class="pb-5">If you need to expand the box you might be writing too much, unless you have pictures... everyone loves pictures</h4>
   <textarea id="mytextarea" data-latest="{{ latest_pis['payload']['content'] }}">{{ latest_pis['payload']['content'] }}</textarea>
   <br/>
   <div class="submit-cont flex justify-end gap-2">
@@ -31,6 +31,7 @@
       tinymce.init({
         // almost all solen from the MyRadio setup of this module.
         selector: '#mytextarea',
+        height: 500,
         plugins: "anchor autolink charmap code emoticons image link lists media preview searchreplace table visualblocks wordcount",
         media_alt_source: false,
         menubar: false,
