@@ -91,7 +91,14 @@ def auth( ):
     userinfo = jwt.decode(args['jwt'], myradio_key, algorithms=["HS256"])
     session['name'] = userinfo['name']
     session['uid'] = userinfo['uid']
-    return redirect(scheduler_url, code=302)
+    return redirect('/noperms')
+
+@app.route('/noperms', methods=['GET'])
+def no_perms():
+    # If the login worked send them to the home page - otherwise go to error page.
+    if verifySession(session):
+        return redirect(scheduler_url, code=302)
+    return render_template('/noperms.html', title='No Permissions')
 
 @app.route('/logout/', methods=['GET'])
 def logout():
