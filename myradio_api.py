@@ -3,6 +3,7 @@ import requests
 from dotenv import load_dotenv
 from datetime import datetime
 import json
+from flask import session
 
 load_dotenv()
 dev_mode = os.environ.get('DEV_MODE', "True")
@@ -227,7 +228,8 @@ def add_pis_item(content):
     data = {
         # 4 is the news feed id for PIS
         "feedid": 4,
-        "content": content
+        "content": content,
+        "memberid": session["uid"],
     }
     data_to_send = json.dumps(data)
     response = requests.post(f"{BASE_URL}news/additem?" + KEY_STRING, data=data_to_send, headers=headers, verify=should_verify)
