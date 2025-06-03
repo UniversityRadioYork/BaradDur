@@ -54,7 +54,7 @@
       saveButton.addEventListener('click', function() {
         saveButton.querySelector('.loading').classList.remove('!hidden');
         saveButton.querySelector('.text').classList.add('!hidden');
-        const content = tinymce.get('mytextarea').getContent();
+        const content = hugerte.get('mytextarea').getContent();
         fetch('/api/save_pis', {
           method: 'POST',
           headers: {
@@ -76,7 +76,7 @@
       });
 
       // undoButton.addEventListener('click', function() {
-      //   tinymce.get('mytextarea').setContent(document.querySelector('#mytextarea').dataset.latest);
+      //   hugerte.get('mytextarea').setContent(document.querySelector('#mytextarea').dataset.latest);
       // });
     });
   </script>
