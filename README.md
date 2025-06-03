@@ -35,7 +35,6 @@ Not in priority order
 ![image](https://github.com/user-attachments/assets/0d0b0446-85d6-439f-805e-3a5b9f54b0db)
 ![image](https://github.com/user-attachments/assets/5961d129-8f91-439e-93b4-1f1f2c0dd957)
 ![image](https://github.com/user-attachments/assets/f2f3e66f-acb1-4656-bf46-bbaeb9ff2584)
-![image](https://github.com/user-attachments/assets/68ad8d89-af06-44dc-98f7-1e386331d287)
 
 
 ## Credits
