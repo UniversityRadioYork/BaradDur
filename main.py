@@ -73,7 +73,8 @@ def index():
         pending = pending_allocations()
         this_terms_shows = get_this_terms_shows()
         latest_pis = get_latest_pis()
-        return render_template('/index.html', title='Scheduler', pending_allocations=pending, this_terms_shows=this_terms_shows, latest_pis=latest_pis)
+        current_term = get_current_application_term()
+        return render_template('/index.html', title='Scheduler', pending_allocations=pending, this_terms_shows=this_terms_shows, latest_pis=latest_pis, current_term=current_term)
     else:
         return auth_route()
 

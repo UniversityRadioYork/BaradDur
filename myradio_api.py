@@ -43,6 +43,11 @@ def get_current_term_id():
     current_term_id = term["payload"][-1]["term_id"]
     return current_term_id
 
+def get_current_application_term():
+    response = requests.get(f"{BASE_URL}term/activeapplicationterm?" + KEY_STRING, verify=should_verify)
+    # if payload is null there is no term to apply to
+    return response.json()
+
 def get_show_application(season_id):
     curr_allocations = pending_allocations()["payload"]
     for allocation in curr_allocations:
@@ -106,18 +111,18 @@ def check_for_conflicts(day, start, duration, term_id = None):
     '''
     if term_id == None:
         term_id = get_current_term_id()
-    time = json.dumps({
-        "day": int(day),
-        "start": int(start),
-        "duration": int(duration)
-    })
     response = requests.get(f"{BASE_URL}scheduler/scheduleconflicts?term_id={term_id}&time[day]={day}&time[start]={start}&time[duration]={duration}" + KEY_STRING, verify=should_verify)
     print(response.text)
     return response.json()
 
 def get_this_terms_shows():
     response = requests.get(f"{BASE_URL}show/allshows?show_type_id={1}&current_term_only={1}" + KEY_STRING, verify=should_verify)
-    return response.json()
+    show_data = []
+    try:
+        show_data = response.json()
+    except: 
+        pass
+    return show_data
 
 def get_latest_pis():
     response = requests.get(f"{BASE_URL}news/latestnewsitem/4?" + KEY_STRING, verify=should_verify)
