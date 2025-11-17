@@ -1,5 +1,5 @@
 # BaradDur
-What if the scheduler wasn't INSIDE myradio? what then huh?
+What if the scheduler wasn't INSIDE myradio? what then huh? It turns out that it would win the gold award for Best Technical Achievement at the Student Radio Awards 2025...
 We also bring in some admin tools and allow for observations at a glance for if shows actually happened.
 
 # Setup
